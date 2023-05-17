@@ -210,8 +210,8 @@ public class ShortArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public ShortArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new ShortArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract short[] deserialize(ByteInflow inflow) throws IOException;

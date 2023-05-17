@@ -12,6 +12,8 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
 import com.s8.io.bohr.lithium.type.ResolveScope;
+import com.s8.io.bohr.neodymium.exceptions.NdIOException;
+import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
 
@@ -149,8 +151,12 @@ public abstract class LiField {
 	 * @throws IOException
 	 */
 	public abstract boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws IOException;
+	
 
+	
+	public abstract LiFieldDelta produceDiff(LiS8Object object) throws IOException;
 
+	
 
 	public void print(LiS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		writer.append("(");

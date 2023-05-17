@@ -9,6 +9,7 @@ import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
@@ -96,6 +97,14 @@ public class BooleanLiField extends PrimitiveLiField {
 		boolean updateValue = handler.getBoolean(update);
 		return baseValue != updateValue;
 	}
+	
+
+
+	@Override
+	public BooleanLiFieldDelta produceDiff(LiS8Object object) throws IOException {
+		return new BooleanLiFieldDelta(this, handler.getBoolean(object));
+	}
+	
 
 	
 	@Override
@@ -131,8 +140,8 @@ public class BooleanLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setBoolean(object, inflow.getBool8());
+		public BooleanLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new BooleanLiFieldDelta(BooleanLiField.this, inflow.getBool8());
 		}
 	}
 
@@ -146,15 +155,15 @@ public class BooleanLiField extends PrimitiveLiField {
 	@Override
 	public LiFieldComposer createComposer(int code) throws LiIOException {
 		switch(flow) {
-		case DEFAULT_FLOW_TAG: case "bool8" : return new Bool8_Outflow(code);
+		case DEFAULT_FLOW_TAG: case "bool8" : return new DefaultComposer(code);
 		default : throw new LiIOException("Failed to find field-outflow for encoding: "+flow);
 		}	
 	}
 	
 	
-	private class Bool8_Outflow extends LiFieldComposer {
+	private class DefaultComposer extends LiFieldComposer {
 
-		public Bool8_Outflow(int code) { super(code); }
+		public DefaultComposer(int code) { super(code); }
 
 		@Override
 		public BooleanLiField getField() {
@@ -167,10 +176,12 @@ public class BooleanLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			outflow.putBool8(handler.getBoolean(object));
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			outflow.putBool8(((BooleanLiFieldDelta) delta).value);
 		}
 	}
+
+
 
 	/* <IO-outflow-section> */	
 

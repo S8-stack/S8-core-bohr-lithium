@@ -259,8 +259,9 @@ public class LiType {
 	public int getNumberOfVertexReferences() {
 		return nVertexReferences;
 	}
-	
-	
+
+
+
 
 	
 }

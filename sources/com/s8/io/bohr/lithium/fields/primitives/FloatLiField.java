@@ -130,8 +130,8 @@ public class FloatLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setFloat(object, deserialize(inflow));
+		public FloatLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new FloatLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract float deserialize(ByteInflow inflow) throws IOException;

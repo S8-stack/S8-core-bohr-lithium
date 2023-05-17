@@ -208,8 +208,8 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public LongArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new LongArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract long[] deserialize(ByteInflow inflow) throws IOException;

@@ -144,8 +144,8 @@ public class StringLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setString(object, inflow.getStringUTF8());
+		public StringLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new StringLiFieldDelta(getField(), inflow.getStringUTF8());
 		}
 	}
 

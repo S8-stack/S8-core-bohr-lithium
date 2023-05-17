@@ -5,8 +5,12 @@ import static com.s8.io.bohr.atom.BOHR_Keywords.FRAME_HEADER;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import com.s8.io.bohr.atom.S8BuildException;
 import com.s8.io.bohr.atom.S8Exception;
@@ -96,6 +100,15 @@ public class LiBranch {
 	private final Base64Generator idxGen;
 	
 	private final DebugModule debugModule;
+	
+	private boolean hasUnpublishedChanges = false;
+
+	private final Deque<LiVertex> unpublishedVertices = new LinkedList<LiVertex>();
+
+
+	private final Set<Integer> unpublishedSlotExposure = new HashSet<>();
+
+
 	
 
 	/**
@@ -260,6 +273,24 @@ public class LiBranch {
 	public void deepCompare(LiBranch deviated, Writer writer) throws IOException, S8ShellStructureException {
 		debugModule.deepCompare(deviated, resolveScope, writer);
 		
+	}
+
+	
+	public void reportExpose(int slot) {
+		unpublishedSlotExposure.add(slot);
+		hasUnpublishedChanges = true;
+	}
+
+
+	public void reportCreate(LiVertex vertex) {
+		unpublishedVertices.add(vertex);
+		hasUnpublishedChanges = true;
+	}
+
+
+	public void reportUpdate(LiVertex vertex) {
+		hasUnpublishedChanges = true;
+		unpublishedVertices.add(vertex);
 	}
 
 

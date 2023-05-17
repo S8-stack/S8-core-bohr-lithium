@@ -43,14 +43,7 @@ public class LiOutbound {
 	private final LiBranch branch;
 
 
-	private boolean hasUnpublishedChanges = false;
-
-	private final Deque<LiVertex> unpublishedVertices = new LinkedList<LiVertex>();
-
-
-	private final Set<Integer> unpublishedSlotExposure = new HashSet<>();
-
-
+	
 
 	public LiOutbound(LiBranch branch) {
 		super();
@@ -95,22 +88,6 @@ public class LiOutbound {
 	}
 
 
-	public void reportExpose(int slot) {
-		unpublishedSlotExposure.add(slot);
-		hasUnpublishedChanges = true;
-	}
-
-
-	public void reportCreate(LiVertex vertex) {
-		unpublishedVertices.add(vertex);
-		hasUnpublishedChanges = true;
-	}
-
-
-	public void reportUpdate(LiVertex vertex) {
-		hasUnpublishedChanges = true;
-		unpublishedVertices.add(vertex);
-	}
 
 
 	/**

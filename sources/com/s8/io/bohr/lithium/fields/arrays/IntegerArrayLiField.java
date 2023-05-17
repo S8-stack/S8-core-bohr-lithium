@@ -214,8 +214,8 @@ public class IntegerArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public IntegerArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new IntegerArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract int[] deserialize(ByteInflow inflow) throws IOException;

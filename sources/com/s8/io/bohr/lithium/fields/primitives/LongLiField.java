@@ -139,8 +139,8 @@ public class LongLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setLong(object, deserialize(inflow));
+		public LongLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new LongLiFieldDelta(getField(), deserialize(inflow));
 		}
 		
 

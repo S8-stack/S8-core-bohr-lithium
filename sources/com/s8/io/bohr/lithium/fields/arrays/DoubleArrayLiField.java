@@ -200,8 +200,8 @@ public class DoubleArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public DoubleArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new DoubleArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 

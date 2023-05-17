@@ -133,8 +133,8 @@ public class IntegerLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setInteger(object, deserialize(inflow));
+		public IntegerLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new IntegerLiFieldDelta(getField(), deserialize(inflow));
 		}
 		
 		public abstract int deserialize(ByteInflow inflow) throws IOException;

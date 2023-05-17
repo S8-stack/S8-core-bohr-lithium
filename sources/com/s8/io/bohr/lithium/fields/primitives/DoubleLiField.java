@@ -8,6 +8,7 @@ import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
@@ -131,8 +132,8 @@ public class DoubleLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setDouble(object, deserialize(inflow));
+		public DoubleLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new DoubleLiFieldDelta(getField(), deserialize(inflow));
 		}
 		
 		public abstract double deserialize(ByteInflow inflow) throws IOException;
@@ -181,7 +182,7 @@ public class DoubleLiField extends PrimitiveLiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			serialize(outflow, handler.getDouble(object));
 		}
 

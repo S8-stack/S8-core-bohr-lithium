@@ -134,8 +134,8 @@ public class ShortLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setShort(object, deserialize(inflow));
+		public ShortLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new ShortLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract short deserialize(ByteInflow inflow) throws IOException;

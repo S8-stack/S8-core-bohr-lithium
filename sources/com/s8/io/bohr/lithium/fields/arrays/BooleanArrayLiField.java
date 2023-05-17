@@ -202,8 +202,8 @@ public class BooleanArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public BooleanArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+			return new BooleanArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public boolean[] deserialize(ByteInflow inflow) throws IOException {
@@ -228,16 +228,16 @@ public class BooleanArrayLiField extends PrimitiveArrayLiField {
 	public LiFieldComposer createComposer(int code) throws LiIOException {
 		switch(flow) {
 
-		case DEFAULT_FLOW_TAG: case "bool8[]" : return new BOOL8_Outflow(code);
+		case DEFAULT_FLOW_TAG: case "bool8[]" : return new DefaultComposer(code);
 
 		default : throw new LiIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private class BOOL8_Outflow extends LiFieldComposer {
+	private class DefaultComposer extends LiFieldComposer {
 
-		public BOOL8_Outflow(int code) { super(code); }
+		public DefaultComposer(int code) { super(code); }
 
 		@Override
 		public void publishFlowEncoding(ByteOutflow outflow) throws IOException {
