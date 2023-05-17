@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 
 
 /**
@@ -30,19 +31,19 @@ public class MyCommercialFloor extends MyFloor {
 	
 	
 	@Override
-	public void init() {
+	public void init() throws LiIOException {
 		int n = (int) (Math.random()*12) + 4;
 		elements = new ArrayList<>();
 		for(int i=0; i<n; i++) {
 			elements.add(MyCommercialFloorElement.create());
 		}
-		advertise(HAS_CHANGED);
+		reportFieldUpdate("elements");
 	}
 	
 
 
 	@Override
-	protected void variate() {
+	protected void variate() throws LiIOException {
 		double u = Math.random();
 		if(u<0.2) {
 			init();
@@ -54,10 +55,10 @@ public class MyCommercialFloor extends MyFloor {
 				elements.get(index).variate();
 			}
 		}
-		advertise(HAS_CHANGED);
+		reportFieldUpdate("elements");
 	}
 	
-	public static MyCommercialFloor create() {
+	public static MyCommercialFloor create() throws LiIOException {
 		MyCommercialFloor floor = new MyCommercialFloor();
 		floor.init();
 		return floor;

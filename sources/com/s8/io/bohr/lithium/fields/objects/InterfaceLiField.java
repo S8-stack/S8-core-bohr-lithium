@@ -23,7 +23,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -151,10 +151,10 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		LiS8Object value = (LiS8Object) handler.get(origin);
 		if(value!=null) {
-			String index = value.S8_index;
+			String index = resolveScope.resolveId(value);
 
 			scope.appendBinding(new BuildScope.Binding() {
 
@@ -177,7 +177,7 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
 		LiS8Object baseValue = (LiS8Object) handler.get(base);
 		LiS8Object updateValue = (LiS8Object) handler.get(update);
 		if(baseValue == null && updateValue == null) {
@@ -187,20 +187,20 @@ public class InterfaceLiField extends LiField {
 			return true;
 		}
 		else {
-			return !baseValue.S8_index.equals(updateValue.S8_index);
+			return !scope.resolveId(baseValue).equals(scope.resolveId(updateValue));
 		}
 	}
 
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		LiS8Object value = (LiS8Object) handler.get(object);
 		if(value!=null) {
 			writer.write("(");
 			writer.write(value.getClass().getCanonicalName());
 			writer.write("): ");
-			writer.write(value.S8_index.toString());	
+			writer.write(scope.resolveId(value));	
 		}
 		else {
 			writer.write("null");
@@ -321,15 +321,10 @@ public class InterfaceLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			LiS8Object value = (LiS8Object) handler.get(object);
 			if(value != null) {
-				String index = value.S8_index;
-				if(index == null) {
-					index = scope.append(value);
-					value.S8_index = index;
-				}
-				outflow.putStringUTF8(index);
+				outflow.putStringUTF8(scope.resolveId(value));
 			}
 			else {
 				outflow.putStringUTF8(null);

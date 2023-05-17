@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.LiS8Object;
 
 
@@ -35,7 +36,7 @@ public class MyBuilding extends LiS8Object {
 	}
 	
 
-	private void init() {
+	private void init() throws LiIOException {
 		nFloors = (int) (Math.random()*128) + 3;
 		lowerGroundFloor = MyFloor.create();
 		groundFloor = MyFloor.create();
@@ -48,19 +49,18 @@ public class MyBuilding extends LiS8Object {
 	}
 
 	
-	public static MyBuilding create() {
+	public static MyBuilding create() throws LiIOException {
 		MyBuilding building = new MyBuilding();
 		building.init();
 		return building;
 	}
 	
-	public void variate() {
+	public void variate() throws LiIOException {
 		
 		
 		lowerGroundFloor.init();
-		upperGroundFloors.forEach(floor -> { if(Math.random()<0.5) { floor.init(); } });
-		
-		advertise(HAS_CHANGED);
+		for(MyFloor floor : upperGroundFloors) {  if(Math.random()<0.5) { floor.init(); } }
+		reportFieldUpdates("lower-ground-floor", "upper-floors");
 	}
 
 }

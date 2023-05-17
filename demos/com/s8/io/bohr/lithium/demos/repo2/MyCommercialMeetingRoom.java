@@ -2,6 +2,7 @@ package com.s8.io.bohr.lithium.demos.repo2;
 
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 
 
 
@@ -27,14 +28,15 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 	
 	
 	@Override
-	public void init() {
+	public void init() throws LiIOException {
 		baseInit();
 		xTableDimension = Math.random();
 		yTableDimension = Math.random();
+		reportFieldUpdates("x-table-dimension", "y-table-dimension");
 	}
 
 	
-	public static MyCommercialMeetingRoom create() {
+	public static MyCommercialMeetingRoom create() throws LiIOException {
 		MyCommercialMeetingRoom room = new MyCommercialMeetingRoom();
 		room.init();
 		return room;
@@ -42,7 +44,7 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 
 
 	@Override
-	public void variate() {
+	public void variate() throws LiIOException {
 		double u = Math.random();
 		if(u<0.3) {
 			init();
@@ -51,6 +53,6 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 			xTableDimension = Math.random();
 			yTableDimension = Math.random();
 		}
-		advertise(HAS_CHANGED);
+		reportFieldUpdates("x-table-dimension", "y-table-dimension");
 	}
 }

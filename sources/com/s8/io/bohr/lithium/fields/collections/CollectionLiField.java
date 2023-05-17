@@ -8,6 +8,7 @@ import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.object.LiS8Object;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 
 
 
@@ -51,11 +52,15 @@ public abstract class CollectionLiField extends LiField {
 
 	private class Printer implements ItemConsumer {
 
+		public final ResolveScope scope;
+		
 		private boolean isInitialized = false;
 		private Writer writer;
+		
 
-		public Printer(Writer writer) {
+		public Printer(ResolveScope scope, Writer writer) {
 			super();
+			this.scope = scope;
 			this.writer = writer;
 		}
 
@@ -72,7 +77,7 @@ public abstract class CollectionLiField extends LiField {
 				writer.write("(");
 				writer.write(item.getClass().getCanonicalName());
 				writer.write("): ");
-				writer.write(item.S8_index.toString());	
+				writer.write(scope.resolveId(item));	
 			}
 			else {
 				writer.write("null");
@@ -82,11 +87,11 @@ public abstract class CollectionLiField extends LiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		LiS8Object[] array = (LiS8Object[]) handler.get(object);
 		if(array!=null) {
 			writer.write('[');
-			forEach(object, new Printer(writer));
+			forEach(object, new Printer(scope, writer));
 			writer.write(']');
 		}
 		else {

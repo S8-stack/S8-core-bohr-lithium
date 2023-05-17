@@ -24,7 +24,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties0T;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -174,14 +174,14 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope rScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		Object value = handler.get(origin);
 		handler.set(clone, value);
 	}
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
 		Object baseValue = handler.get(base);
 		Object updateValue = handler.get(update);
 		return (baseValue!=null && !baseValue.equals(updateValue)) 
@@ -190,7 +190,7 @@ public class EnumLiField extends LiField {
 	
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		Object value = handler.get(object);
 		if(value!=null) {
 			Enum<?> enumValue = (Enum<?>) value;
@@ -301,7 +301,7 @@ public class EnumLiField extends LiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			serialize(outflow, handler.get(object));
 		}
 		

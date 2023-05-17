@@ -117,7 +117,7 @@ public class LiTypeParser {
 				String name = inflow.getStringUTF8();
 
 				/* retrieve inflow field */
-				LiField field = type.getField(name);
+				LiField field = type.getFieldByName(name);
 				if(field == null) {
 					throw new LiIOException("Failed to find field for name = "+name, type.getBaseType());
 				}

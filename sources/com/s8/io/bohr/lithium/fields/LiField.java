@@ -11,6 +11,7 @@ import com.s8.io.bohr.lithium.object.LiS8Object;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
 
@@ -137,7 +138,7 @@ public abstract class LiField {
 	 * @param bindings
 	 * @throws LthSerialException
 	 */
-	public abstract void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException;
+	public abstract void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException;
 
 	/**
 	 * 
@@ -147,17 +148,17 @@ public abstract class LiField {
 	 * @throws LthSerialException
 	 * @throws IOException
 	 */
-	public abstract boolean hasDiff(LiS8Object base, LiS8Object update) throws IOException;
+	public abstract boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws IOException;
 
 
 
-	public void print(LiS8Object object, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(LiS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		writer.append("(");
 		writer.append(printType());
 		writer.append(") ");
 		writer.append(name);
 		writer.append(": ");
-		printValue(object, writer);
+		printValue(object, scope, writer);
 	}
 	
 
@@ -167,7 +168,7 @@ public abstract class LiField {
 	public abstract String printType();
 
 
-	protected abstract void printValue(LiS8Object object, Writer writer) throws LiIOException, 
+	protected abstract void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws LiIOException, 
 	IOException, S8ShellStructureException;
 
 	

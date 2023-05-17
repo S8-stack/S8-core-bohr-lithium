@@ -32,16 +32,16 @@ public class LiTest03 {
 		
 		MyBuilding building = MyBuilding.create();
 		LiBranch branch = new LiBranch("com.toto.123.098", "master", codebase);
-		branch.append(building).expose(2);
+		branch.resolveId(building).expose(2);
 		
 		
 		LinkedByteOutflow outflow = new LinkedByteOutflow(1024);
-		branch.push(outflow);
+		branch.pushSequence(outflow);
 		System.out.println(outflow);
 		
 		LinkedByteInflow inflow = new LinkedByteInflow(outflow.getHead());
 		LiBranch rBranch = new LiBranch("com.toto.123.098", "master", codebase);
-		rBranch.pull(inflow);
+		rBranch.pullSequence(inflow);
 		System.out.println(rBranch.toString());
 		
 		//rBranch.print(new OutputStreamWriter(System.out));
@@ -56,9 +56,9 @@ public class LiTest03 {
 		
 		// transmit
 		outflow = new LinkedByteOutflow(1024);
-		branch.push(outflow);
+		branch.pushSequence(outflow);
 		inflow = new LinkedByteInflow(outflow.getHead());
-		rBranch.pull(inflow);
+		rBranch.pullSequence(inflow);
 		
 		System.out.println("Test02");
 		rBranch.deepCompare(branch, writer);

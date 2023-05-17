@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
@@ -54,7 +55,7 @@ public class LiType {
 	/**
 	 * fields
 	 */
-	public Map<String, LiField> fieldsByName;
+	final Map<String, LiField> fieldsByName = new HashMap<>();
 
 	
 	/**
@@ -177,7 +178,7 @@ public class LiType {
 	 * @param name
 	 * @return
 	 */
-	public LiField getField(String name) {
+	public LiField getFieldByName(String name) {
 		return fieldsByName.get(name);
 	}
 
@@ -201,10 +202,10 @@ public class LiType {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public LiS8Object deepClone(LiS8Object origin, BuildScope scope) throws LiIOException {
+	public LiS8Object deepClone(LiS8Object origin, ResolveScope resolveScope, BuildScope scope) throws LiIOException {
 		LiS8Object clone = createNewInstance();
 		for(LiField field : fields) {
-			field.deepClone(origin, clone, scope);
+			field.deepClone(origin, resolveScope, clone, scope);
 		}
 		return clone;
 	}
@@ -233,8 +234,8 @@ public class LiType {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void print(LiS8Object object, Writer writer) throws IOException, S8ShellStructureException {
-		debugModule.print(object, writer);
+	public void print(LiS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+		debugModule.print(object, scope, writer);
 	}
 
 
@@ -246,8 +247,8 @@ public class LiType {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void deepCompare(LiS8Object left, LiS8Object right, Writer writer) throws IOException, S8ShellStructureException {
-		debugModule.deepCompare(left, right, writer);
+	public void deepCompare(LiS8Object left, LiS8Object right, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+		debugModule.deepCompare(left, right, scope, writer);
 	}
 	
 	

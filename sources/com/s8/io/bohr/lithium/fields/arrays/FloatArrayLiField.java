@@ -15,7 +15,7 @@ import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.object.LiS8Object;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -93,13 +93,13 @@ public class FloatArrayLiField extends PrimitiveArrayLiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		float[] array = (float[]) handler.get(origin);
 		handler.set(clone, clone(array));
 	}
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws LiIOException {
 		float[] baseValue = (float[]) handler.get(base);
 		float[] updateValue = (float[]) handler.get(update);
 		return !areEqual(baseValue, updateValue);
@@ -156,7 +156,7 @@ public class FloatArrayLiField extends PrimitiveArrayLiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		float[] array = (float[]) handler.get(object);
 		if(array!=null) {
 			boolean isInitialized = false;
@@ -270,7 +270,7 @@ public class FloatArrayLiField extends PrimitiveArrayLiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			serialize(outflow, (float[]) handler.get(object));
 		}
 		

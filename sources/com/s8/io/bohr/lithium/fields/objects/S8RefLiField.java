@@ -26,7 +26,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -194,13 +194,13 @@ public class S8RefLiField extends LiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope reScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		handler.set(clone, (LiS8Ref<?>) handler.get(origin));
 	}
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
 		LiS8Ref<?> baseValue = (LiS8Ref<?>) handler.get(base);
 		LiS8Ref<?> updateValue = (LiS8Ref<?>) handler.get(update);
 		return !LiS8Ref.areEqual(baseValue, updateValue);
@@ -217,7 +217,7 @@ public class S8RefLiField extends LiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		LiS8Ref<?> value = (LiS8Ref<?>) handler.get(object);
 		if(value!=null) {
 			writer.write(value.toString());
@@ -308,7 +308,7 @@ public class S8RefLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			LiS8Ref<?> value = (LiS8Ref<?>) handler.get(object);
 			LiS8Ref.write(value, outflow);
 		}

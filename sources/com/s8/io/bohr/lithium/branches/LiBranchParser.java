@@ -146,14 +146,8 @@ public class LiBranchParser {
 		/* create object */
 		LiS8Object object = type.createNewInstance();
 
-		/* clear spin */
-		object.S8_spin = false;
-
-		/* assign object id */
-		object.S8_index = index;
-
 		/* create vertex on object (v->o & o->v links created) */
-		LiVertex vertex = branch.append(object);
+		LiVertex vertex = branch.append(index, object);
 
 		/* assign parser */
 		vertex.typeParser = typeParser;
@@ -169,11 +163,11 @@ public class LiBranchParser {
 	
 	public void onUpdateNode(ByteInflow inflow) throws IOException {
 		
-		String index = inflow.getStringUTF8();
+		String id = inflow.getStringUTF8();
 		
-		LiVertex vertex = branch.vertices.get(index);
+		LiVertex vertex = branch.getVertex(id);
 		if(vertex == null) {
-			throw new LiIOException("Failed to find vertex for index = "+index);
+			throw new LiIOException("Failed to find vertex for index = "+id);
 		}
 
 		/* retrieve parser from vertex */
@@ -190,12 +184,12 @@ public class LiBranchParser {
 	 */
 	public void onExposeNode(ByteInflow inflow) throws IOException {
 		
-		String index = inflow.getStringUTF8();
+		String id = inflow.getStringUTF8();
 		int slot = inflow.getUInt8();
 
-		LiVertex vertex = branch.vertices.get(index);
+		LiVertex vertex = branch.getVertex(id);
 		if(vertex == null) {
-			throw new LiIOException("Failed to find vertex for index = "+index);
+			throw new LiIOException("Failed to find vertex for index = "+id);
 		}
 		
 		/* expose vertex in slot */
@@ -209,10 +203,10 @@ public class LiBranchParser {
 	public void onRemoveNode(ByteInflow inflow) throws IOException {
 
 		
-		String index = inflow.getStringUTF8();
+		String id = inflow.getStringUTF8();
 		
 		/* remove vertex */
-		branch.vertices.remove(index);
+		branch.removeVertex(id);
 	}
 
 

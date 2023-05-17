@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.type.LiType;
 
 /**
@@ -37,6 +38,13 @@ import com.s8.io.bohr.lithium.type.LiType;
  * 
  */
 public class LiCodebase {
+	
+	
+	public static LiCodebase from(Class<?>... types) throws LiBuildException {
+		LiCodebaseBuilder codebaseBuilder = new LiCodebaseBuilder(false);
+		codebaseBuilder.pushObjectTypes(types);
+		return codebaseBuilder.build();
+	}
 
 
 	
@@ -76,7 +84,7 @@ public class LiCodebase {
 	 * 
 	 * @param typesContext
 	 */
-	public LiCodebase(boolean isVerbose) {
+	LiCodebase(boolean isVerbose) {
 		super();
 		
 		this.isVerbose = isVerbose;

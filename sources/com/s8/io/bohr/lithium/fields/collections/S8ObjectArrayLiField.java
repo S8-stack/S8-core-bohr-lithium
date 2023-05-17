@@ -21,7 +21,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -179,15 +179,15 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		LiS8Object[] value = (LiS8Object[]) handler.get(origin);
 		if(value!=null) {
 			int n = value.length;
 
 			LiS8Object[] clonedArray = new LiS8Object[n];
-			String[] indices = new String[n];
+			String[] identifiers = new String[n];
 			for(int i=0; i<n; i++) {
-				indices[i] = value[i].S8_index;
+				identifiers[i] = resolveScope.resolveId(value[i]);
 			}
 
 			handler.set(clone, clonedArray);
@@ -198,7 +198,7 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 				public void resolve(BuildScope scope) throws LiIOException {
 					for(int i=0; i<n; i++) {
 						// no need to upcast to S8Object
-						LiS8Object indexedObject = scope.retrieveObject(indices[i]);
+						LiS8Object indexedObject = scope.retrieveObject(identifiers[i]);
 						if(indexedObject==null) {
 							throw new LiIOException("Fialed to retriev vertex");
 						}
@@ -215,15 +215,15 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws IOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws IOException {
 		LiS8Object[] baseValue = (LiS8Object[]) handler.get(base);
 		LiS8Object[] updateValue = (LiS8Object[]) handler.get(update);
-		return !areEqual(baseValue, updateValue);
+		return !areEqual(baseValue, updateValue, scope);
 	}
 
 
 
-	private static boolean areEqual(LiS8Object[] array0, LiS8Object[] array1) {
+	private static boolean areEqual(LiS8Object[] array0, LiS8Object[] array1, ResolveScope scope) throws LiIOException {
 
 		// check nulls
 		if(array0 == null) { return array1==null; }
@@ -245,7 +245,7 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 					|| (obj1==null && obj0!=null) 
 					
 					// both non null with different indices
-					|| (obj0!=null && obj1!=null && !obj0.S8_index.equals(obj1.S8_index))) { 
+					|| (obj0!=null && obj1!=null && !scope.resolveId(obj0).equals(scope.resolveId(obj1)))) { 
 				return false; 
 			}
 		}
@@ -407,7 +407,7 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 
 			// array
 			LiS8Object[] array = (LiS8Object[]) handler.get(object);
@@ -418,11 +418,7 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 					LiS8Object itemObject = array[i];
 					String index;
 					if(itemObject != null) {
-						index = itemObject.S8_index;
-						if(index == null) {
-							index = scope.append(itemObject);
-							itemObject.S8_index = index;
-						}
+						index = scope.resolveId(itemObject);
 						outflow.putStringUTF8(index);
 					}
 					else {
@@ -441,4 +437,6 @@ public class S8ObjectArrayLiField extends CollectionLiField {
 
 	}
 	/* </IO-outflow-section> */
+
+
 }

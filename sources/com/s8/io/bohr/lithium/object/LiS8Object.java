@@ -2,6 +2,7 @@ package com.s8.io.bohr.lithium.object;
 
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
 import com.s8.io.bohr.lithium.branches.LiVertex;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 
 /**
  * <p>
@@ -57,26 +58,6 @@ public class LiS8Object {
 	
 	
 	/**
-	 * <h1>DO NOT USE THIS FIELD: SYSTEM ONLY</h1>
-	 * <p>
-	 * This index acts as an internal identifier and is automatically assigned at
-	 * commit time.
-	 * </p>
-	 */
-	public String S8_index = null;
-
-
-	/**
-	 * <h1>id field</h1>
-	 * <p>(Do not use this field)</p>
-	 * <p>For internal use only</p>
-	 */
-	public boolean S8_spin = false;
-	
-	
-	
-	
-	/**
 	 * Object listeners
 	 */
 	public LiVertex S8_vertex;
@@ -94,20 +75,15 @@ public class LiS8Object {
 	/**
 	 * 
 	 * @param event
+	 * @throws LiIOException 
 	 */
-	public void advertise(long event) {
-		if(S8_vertex!=null) { S8_vertex.advertise(event); }
+	public void reportFieldUpdate(String fieldName) throws LiIOException {
+		if(S8_vertex!=null) { S8_vertex.reportChange(fieldName); }
 	}
 	
 	
-	
-
-	/**
-	 * 
-	 * @param slot
-	 */
-	public void expose(int slot) {
-		if(S8_vertex!=null) { S8_vertex.expose(slot); }
+	public void reportFieldUpdates(String... fieldNames) throws LiIOException {
+		if(S8_vertex!=null) { for(String fieldName : fieldNames) { S8_vertex.reportChange(fieldName); } }
 	}
 	
 }

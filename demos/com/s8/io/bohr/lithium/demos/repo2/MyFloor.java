@@ -2,6 +2,7 @@
 
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.LiS8Object;
 
 
@@ -50,7 +51,7 @@ public abstract class MyFloor extends LiS8Object {
 
 	
 
-	public static MyFloor create() {
+	public static MyFloor create() throws LiIOException {
 		MyFloor element = null;
 		if(Math.random()<0.3){
 			element = MyEmptyFloor.create();
@@ -64,9 +65,9 @@ public abstract class MyFloor extends LiS8Object {
 
 
 	
-	protected abstract void init();
+	protected abstract void init() throws LiIOException;
 	
-	protected abstract void variate();
+	protected abstract void variate() throws LiIOException;
 
 
 

@@ -26,7 +26,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -254,7 +254,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope rScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 
 		@SuppressWarnings("unchecked")
 		List<T> value = (List<T>) handler.get(origin);
@@ -264,7 +264,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 			List<T> clonedList = new ArrayList<T>(n);
 			String[] indices = new String[n];
 			for(int i=0; i<n; i++) {
-				indices[i] = value.get(i).S8_index;
+				indices[i] = rScope.resolveId(value.get(i));
 			}
 
 			handler.set(clone, clonedList);
@@ -289,10 +289,10 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
 		List<T> baseValue = (List<T>) handler.get(base);
 		List<T> updateValue = (List<T>) handler.get(update);
-		return !areEqual(baseValue, updateValue);
+		return !areEqual(baseValue, updateValue, scope);
 	}
 
 
@@ -300,7 +300,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 
 
 
-	private boolean areEqual(List<T> array0, List<T> array1) {
+	private boolean areEqual(List<T> array0, List<T> array1, ResolveScope scope) throws LiIOException {
 
 		// check nulls
 		if(array0 == null) { return array1==null; }
@@ -318,7 +318,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 			obj1 = array1.get(i);
 			if((obj0==null && obj1!=null) || (obj1==null && obj0!=null) // one is null while the other is non-null
 					|| (obj0!=null  && obj1!=null // both non null with different indices
-					&& !obj0.S8_index.equals(obj1.S8_index))) { 
+					&& !scope.resolveId(obj0).equals(scope.resolveId(obj1)))) { 
 				return false; 
 			}
 		}
@@ -327,7 +327,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		@SuppressWarnings("unchecked")
 		List<T> list = (List<T>) handler.get(object);
 		if(list!=null) {
@@ -347,7 +347,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 					writer.write("(");
 					writer.write(value.getClass().getCanonicalName());
 					writer.write("): ");
-					writer.write(value.S8_index.toString());
+					writer.write(scope.resolveId(value));
 				}
 				else {
 					writer.write("null");
@@ -488,7 +488,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			@SuppressWarnings("unchecked")
 			List<T> list = (List<T>) handler.get(object);
 
@@ -501,12 +501,7 @@ public class S8ObjectListLiField<T extends LiS8Object> extends CollectionLiField
 					T itemObject = list.get(i);
 					
 					if(itemObject!=null) {
-						String index = itemObject.S8_index;
-						if(index == null) {
-							index = scope.append(itemObject);
-							itemObject.S8_index = index;
-						}
-						outflow.putStringUTF8(index);
+						outflow.putStringUTF8(scope.resolveId(object));
 					}
 					else {
 						outflow.putStringUTF8(null);

@@ -161,26 +161,6 @@ public class LiTypeComposer {
 
 
 
-	/**
-	 * 
-	 * @param outflow
-	 * @param index
-	 * @param slot
-	 * @throws IOException
-	 */
-	public void publish_EXPOSE_NODE(ByteOutflow outflow, String index, int slot) throws IOException {
-
-		/* UPDATE_AND_EXPOSE_NODE */
-		outflow.putUInt8(BOHR_Keywords.EXPOSE_NODE);
-
-		/* pass index */
-		outflow.putStringUTF8(index);
-
-		/* pass index */
-		outflow.putUInt8(slot);	
-	}
-
-
 
 
 	/**

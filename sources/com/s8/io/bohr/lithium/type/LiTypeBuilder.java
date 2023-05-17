@@ -359,11 +359,7 @@ public class LiTypeBuilder {
 				case S8_OBJECT : 
 					contextBuilder.pushObjectType(props.getEmbeddedType());
 					break;
-
-				case S8_ROW:
-					contextBuilder.pushRowType(props.getEmbeddedType());
-					break;
-
+					
 				default: break; // do nothing
 				}
 
@@ -405,10 +401,7 @@ public class LiTypeBuilder {
 					codebaseBuilder.pushObjectType(properties.getEmbeddedType());
 					break;
 
-				case S8_ROW:
-					codebaseBuilder.pushRowType(properties.getEmbeddedType());
-					break;
-
+				
 				default: break; // do nothing
 				}
 			}
@@ -435,10 +428,7 @@ public class LiTypeBuilder {
 					codebaseBuilder.pushObjectType(properties.getEmbeddedType());
 					break;
 
-				case S8_ROW:
-					codebaseBuilder.pushRowType(properties.getEmbeddedType());
-					break;
-
+				
 				default: break; // do nothing
 				}
 
@@ -482,7 +472,7 @@ public class LiTypeBuilder {
 
 
 		// build map
-		Map<String, LiField> fieldsByName = new HashMap<String, LiField>(nFields);
+		Map<String, LiField> fieldsByName = type.fieldsByName;
 		AtomicInteger ordinator = new AtomicInteger(0);
 		fieldBuildersByName.forEach((name, builder) -> {
 			try {
@@ -493,7 +483,6 @@ public class LiTypeBuilder {
 				}
 			}
 		});
-		type.fieldsByName = fieldsByName;
 
 
 		// build array

@@ -12,8 +12,10 @@ import com.s8.io.bohr.atom.S8BuildException;
 import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.LiS8Object;
 import com.s8.io.bohr.lithium.type.BuildScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.base64.Base64Generator;
@@ -37,6 +39,15 @@ public class LiBranch {
 
 
 	
+	public final ResolveScope resolveScope = new ResolveScope() {
+		
+		@Override
+		public String resolveId(LiS8Object object) throws LiIOException {
+			return append(null, object).id;
+		}
+	};
+	
+	
 	public final String address;
 	
 	public final String id;
@@ -49,11 +60,8 @@ public class LiBranch {
 	/**
 	 * The interior mapping
 	 */
-	public final Map<String, LiVertex> vertices;
+	final Map<String, LiVertex> vertices;
 	
-	
-	
-
 	
 	/**
 	 * inbound
@@ -68,9 +76,9 @@ public class LiBranch {
 	
 	
 	
-	public final LiVertex[] exposure;
+	final LiVertex[] exposure;
 	
-	
+
 	
 	/**
 	 * Stateful var
@@ -116,6 +124,24 @@ public class LiBranch {
 		idxGen = new Base64Generator(id);
 	}
 	
+	
+	
+	public LiVertex getVertex(String id) {
+		return vertices.get(id);
+	}
+	
+
+	public void removeVertex(String id) {
+		vertices.remove(id);
+	}
+	
+	
+	public void expose(int slot, LiS8Object object) throws IOException {
+		LiVertex vertex = resolveVertex(object);
+		exposure[slot] = vertex;
+		outbound.reportExpose(slot);
+	}
+	
 
 	public LiS8Object retrieveObject(String index) {
 		return vertices.get(index).object;
@@ -149,7 +175,7 @@ public class LiBranch {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void pull(ByteInflow inflow) throws IOException {
+	public void pullSequence(ByteInflow inflow) throws IOException {
 		// check opening
 		if(!inflow.matches(FRAME_HEADER)) { throw new IOException("DO NOT MATCH HEADER"); }
 		inbound.parse(inflow);
@@ -164,50 +190,52 @@ public class LiBranch {
 	 * @throws S8Exception
 	 * @throws IOException
 	 */
-	public void push(ByteOutflow outflow) throws S8BuildException, S8Exception, IOException {
+	public void pushSequence(ByteOutflow outflow) throws S8BuildException, S8Exception, IOException {
 		outflow.putByteArray(FRAME_HEADER);
 		outbound.compose(outflow);
 		outflow.putByteArray(FRAME_FOOTER);
 	}
 
+	
 
-	/**
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public LiVertex append(LiS8Object object) {
-		
-		
-		/* retrieve object index */
-		String index = object.S8_index;
-		
-		/* if index is null, assigned a newly generated one */
-		if(index == null) {
-			index = createNewIndex();
-			object.S8_index = index;
-		}
-		
+	
+	
+	public LiVertex resolveVertex(LiS8Object object) throws LiIOException {
+		return append(null, object);
+	}
+
+	
+	
+	public LiVertex append(String id, LiS8Object object) throws LiIOException {
 		
 		/* retrieve object vertex */
 		LiVertex vertex = (LiVertex) object.S8_vertex;
 		
 		if(vertex == null) {
 			
+			/* if index is null, assigned a newly generated one */
+			boolean isCreating;
+			if(isCreating = (id == null)){
+				id = createNewIndex();
+			}
+			
 			/* create vertex */
-			vertex = new LiVertex(this, object);
+			vertex = new LiVertex(this, id, object);
 			
 			/* assign newly created vertex */
 			object.S8_vertex = vertex;
 			
 			/* newly created vertex, so report activity */
-			outbound.reportActivity(vertex);
+			if(isCreating) {
+				outbound.reportCreate(vertex);	
+			}
 			
 			/* register vertex */
-			vertices.put(index, vertex);
+			vertices.put(id, vertex);
 		}
 		
 		return vertex;
+		
 	}
 
 
@@ -219,7 +247,7 @@ public class LiBranch {
 	 * @throws IOException
 	 */
 	public void print(Writer writer) throws IOException {
-		debugModule.print(writer);
+		debugModule.print(resolveScope, writer);
 	}
 
 	
@@ -230,9 +258,12 @@ public class LiBranch {
 	 * @throws S8ShellStructureException 
 	 */
 	public void deepCompare(LiBranch deviated, Writer writer) throws IOException, S8ShellStructureException {
-		debugModule.deepCompare(deviated, writer);
+		debugModule.deepCompare(deviated, resolveScope, writer);
 		
 	}
+
+
+
 
 
 }

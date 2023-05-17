@@ -26,7 +26,7 @@ import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties0T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
-import com.s8.io.bohr.lithium.type.PublishScope;
+import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -180,7 +180,7 @@ public class S8SerializableLiField extends LiField {
 	}
 
 	@Override
-	public void deepClone(LiS8Object origin, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
 		BohrSerializable value = (BohrSerializable) handler.get(origin);
 		handler.set(clone, value.deepClone());
 	}
@@ -193,7 +193,7 @@ public class S8SerializableLiField extends LiField {
 
 	
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update) throws LiIOException {
+	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
 		BohrSerializable baseValue = (BohrSerializable) handler.get(base);
 		BohrSerializable updateValue = (BohrSerializable) handler.get(update);
 		return (baseValue!=null && !baseValue.equals(updateValue)) || (baseValue==null && updateValue!=null);
@@ -201,7 +201,7 @@ public class S8SerializableLiField extends LiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, Writer writer) throws IOException {
+	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		Object value = handler.get(object);
 		if(value!=null) {
 			writer.write("(");
@@ -308,7 +308,7 @@ public class S8SerializableLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, PublishScope scope) throws IOException {
+		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
 			BohrSerializable value = (BohrSerializable) handler.get(object);
 			if(value != null) {
 				outflow.putUInt8(BOHR_Properties.IS_NON_NULL_PROPERTIES_BIT);
