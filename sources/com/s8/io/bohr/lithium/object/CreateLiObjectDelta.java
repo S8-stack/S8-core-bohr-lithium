@@ -11,9 +11,7 @@ import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.LiTypeComposer;
-import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -23,16 +21,16 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class CreateNdObjectDelta extends LiObjectDelta {
+public class CreateLiObjectDelta extends LiObjectDelta {
 
-	public List<LiFieldDelta> deltas;
+	public final List<LiFieldDelta> deltas;
 
 
 	public final LiType type;
 
 	
 
-	public CreateNdObjectDelta(String index, LiType type, List<LiFieldDelta> deltas) {
+	public CreateLiObjectDelta(String index, LiType type, List<LiFieldDelta> deltas) {
 		super(index);
 
 		this.type = type;
@@ -48,13 +46,13 @@ public class CreateNdObjectDelta extends LiObjectDelta {
 		LiTypeComposer composer = outbound.getComposer(type.getRuntimeName());
 		
 		/*  advertise diff type: publish a create node */
-		composer.publish_CREATE_NODE(outflow, index);
+		composer.publish_CREATE_NODE(outflow, id);
 
 		/* serialize field deltas */
 		// produce all diffs
 		for(LiFieldDelta delta : deltas) {
 			int ordinal = delta.getField().ordinal;
-			composer.fieldComposers[ordinal].publish(delta, outflow);
+			composer.fieldComposers[ordinal].compose(delta, outflow);
 		}
 
 		/* Close node */
@@ -64,33 +62,20 @@ public class CreateNdObjectDelta extends LiObjectDelta {
 
 
 	@Override
-	public void consume(LiBranch branch, BuildScope scope) throws LiIOException {
+	public void operate(LiBranch branch, BuildScope scope) throws LiIOException {
 
 		// create object
-		LiS8Object object = type.createNewInstance();
+		LiObject object = type.createNewInstance();
 
 
 		/* consume diff */
-		for(LiFieldDelta delta : deltas) { delta.consume(object, scope); }
+		for(LiFieldDelta delta : deltas) { delta.operate(object, scope); }
 
 		/* append */
-		branch.append(index, object);
+		branch.append(id, object);
 		
 	}
 
-
-	@Override
-	public void computeFootprint(MemoryFootprint weight) {
-
-		weight.reportInstance();
-
-		// fields
-		if(deltas!=null) {
-			for(NdFieldDelta delta : deltas) {
-				delta.computeFootprint(weight);
-			}
-		}
-	}
 
 }
 

@@ -17,11 +17,12 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
-import com.s8.io.bohr.lithium.object.LiS8Ref;
+import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.io.bohr.lithium.object.LiRef;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
@@ -48,7 +49,7 @@ public class S8RefLiField extends LiField {
 		@Override
 		public LiFieldProperties captureField(Field field) throws LiBuildException {
 			Class<?> fieldType = field.getType();
-			if(LiS8Ref.class.equals(fieldType)) {
+			if(LiRef.class.equals(fieldType)) {
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
 
@@ -71,7 +72,7 @@ public class S8RefLiField extends LiField {
 			Class<?> baseType = method.getParameterTypes()[0];
 			S8Setter annotation = method.getAnnotation(S8Setter.class);
 			if(annotation != null) {
-				if(LiS8Ref.class.isAssignableFrom(baseType)) {
+				if(LiRef.class.isAssignableFrom(baseType)) {
 
 					Type parameterType = method.getGenericParameterTypes()[0];
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
@@ -96,7 +97,7 @@ public class S8RefLiField extends LiField {
 			S8Getter annotation = method.getAnnotation(S8Getter.class);
 			if(annotation != null) {
 
-				if(LiS8Ref.class.isAssignableFrom(baseType)) {
+				if(LiRef.class.isAssignableFrom(baseType)) {
 
 					Type parameterType = method.getGenericReturnType();
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
@@ -156,7 +157,7 @@ public class S8RefLiField extends LiField {
 
 
 	@Override
-	public void collectReferencedBlocks(LiS8Object object, Queue<String> references) {
+	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
 		/*
 		try {
 			BkRef<?> ref = (BkRef<?>) field.get(object);
@@ -180,33 +181,29 @@ public class S8RefLiField extends LiField {
 	}
 
 	@Override
-	public void sweep(LiS8Object object, GraphCrawler crawler) {
+	public void sweep(LiObject object, GraphCrawler crawler) {
 		// nothing to collect here
 	}
 
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) throws LiIOException {
-		String address = ((LiS8Ref<?>) handler.get(object)).address;
+	public void computeFootprint(LiObject object, MemoryFootprint weight) throws LiIOException {
+		String address = ((LiRef) handler.get(object)).address;
 		weight.reportBytes(1 + address.length() + 8);
 	}
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope reScope, LiS8Object clone, BuildScope scope) throws LiIOException {
-		handler.set(clone, (LiS8Ref<?>) handler.get(origin));
+	public void deepClone(LiObject origin, ResolveScope reScope, LiObject clone, BuildScope scope) throws LiIOException {
+		handler.set(clone, (LiRef) handler.get(origin));
 	}
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
-		LiS8Ref<?> baseValue = (LiS8Ref<?>) handler.get(base);
-		LiS8Ref<?> updateValue = (LiS8Ref<?>) handler.get(update);
-		return !LiS8Ref.areEqual(baseValue, updateValue);
+	public LiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		return new S8RefLiFieldDelta(this, (LiRef) handler.get(object));
 	}
-
-
 
 	@Override
 	public void DEBUG_print(String indent) {
@@ -217,8 +214,8 @@ public class S8RefLiField extends LiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
-		LiS8Ref<?> value = (LiS8Ref<?>) handler.get(object);
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
+		LiRef value = (LiRef) handler.get(object);
 		if(value!=null) {
 			writer.write(value.toString());
 		}
@@ -251,8 +248,8 @@ public class S8RefLiField extends LiField {
 	private class Inflow extends LiFieldParser {
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public S8RefLiFieldDelta parseValue(ByteInflow inflow) throws IOException {
+			return new S8RefLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 
@@ -262,15 +259,8 @@ public class S8RefLiField extends LiField {
 		}
 		
 
-		private LiS8Ref<?> deserialize(ByteInflow inflow) throws IOException {
-			int length = (int) inflow.getUInt7x();
-			if(length > 0) {
-				//byte[] bytes = inflow.getByteArray(length);
-				return null;
-			}
-			else {
-				return null;
-			}
+		private LiRef deserialize(ByteInflow inflow) throws IOException {
+			return LiRef.read(inflow);
 		}
 	}
 
@@ -308,9 +298,9 @@ public class S8RefLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			LiS8Ref<?> value = (LiS8Ref<?>) handler.get(object);
-			LiS8Ref.write(value, outflow);
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			LiRef value = ((S8RefLiFieldDelta) delta).ref;
+			LiRef.write(value, outflow);
 		}
 	}
 	/* </IO-outflow-section> */
@@ -319,7 +309,7 @@ public class S8RefLiField extends LiField {
 
 
 	@Override
-	public boolean isValueResolved(LiS8Object object) throws LiIOException {
+	public boolean isValueResolved(LiObject object) throws LiIOException {
 		// TODO Auto-generated method stub
 		return false;
 	}

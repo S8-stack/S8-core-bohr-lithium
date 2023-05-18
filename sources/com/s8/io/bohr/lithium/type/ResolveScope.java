@@ -3,7 +3,7 @@ package com.s8.io.bohr.lithium.type;
 import java.io.IOException;
 
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 
 
 /**
@@ -24,6 +24,6 @@ public interface ResolveScope {
 	 * @return
 	 * @throws IOException 
 	 */
-	public String resolveId(LiS8Object object) throws LiIOException;
+	public String resolveId(LiObject object) throws LiIOException;
 
 }

@@ -1,10 +1,12 @@
-package com.s8.io.bohr.lithium.fields.arrays;
+package com.s8.io.bohr.lithium.fields.objects;
 
+import com.s8.io.bohr.atom.BohrSerializable;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
+
 
 /**
  * 
@@ -13,23 +15,29 @@ import com.s8.io.bohr.lithium.type.BuildScope;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class DoubleArrayLiFieldDelta extends LiFieldDelta {
-
-	public final DoubleArrayLiField field;
+public class S8SerializableLiFieldDelta extends LiFieldDelta {
 	
-	public final double[] value;
+	
+	public final S8SerializableLiField field;
+	
+	public final BohrSerializable value;
 
-	public DoubleArrayLiFieldDelta(DoubleArrayLiField field, double[] array) {
+	
+	
+	public S8SerializableLiFieldDelta(S8SerializableLiField field, BohrSerializable value) {
 		super();
 		this.field = field;
-		this.value = array;
+		this.value = value;
 	}
-
-	public @Override LiField getField() { return field; }
 
 	@Override
 	public void operate(LiObject object, BuildScope scope) throws LiIOException {
-		field.handler.set(object, value); 
+		field.handler.set(object, value);
 	}
-
+	
+	
+	@Override
+	public LiField getField() { 
+		return field;
+	}
 }

@@ -15,10 +15,11 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
@@ -120,9 +121,9 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public void sweep(LiS8Object object, GraphCrawler crawler) {
+	public void sweep(LiObject object, GraphCrawler crawler) {
 		try {
-			LiS8Object fieldObject = (LiS8Object) handler.get(object);
+			LiObject fieldObject = (LiObject) handler.get(object);
 			if(fieldObject!=null) {
 				crawler.accept(fieldObject);
 			}
@@ -134,7 +135,7 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public void collectReferencedBlocks(LiS8Object object, Queue<String> references) {
+	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
 		// No ext references
 	}
 
@@ -145,14 +146,14 @@ public class InterfaceLiField extends LiField {
 	}
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) throws LiIOException {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) throws LiIOException {
 		weight.reportReference();
 	}
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
-		LiS8Object value = (LiS8Object) handler.get(origin);
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
+		LiObject value = (LiObject) handler.get(origin);
 		if(value!=null) {
 			String index = resolveScope.resolveId(value);
 
@@ -162,7 +163,7 @@ public class InterfaceLiField extends LiField {
 				public void resolve(BuildScope scope) throws LiIOException {
 
 					// no need to upcast to S8Object
-					LiS8Object indexedObject = scope.retrieveObject(index);
+					LiObject indexedObject = scope.retrieveObject(index);
 					if(indexedObject==null) {
 						throw new LiIOException("Fialed to retriev vertex");
 					}
@@ -177,25 +178,16 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
-		LiS8Object baseValue = (LiS8Object) handler.get(base);
-		LiS8Object updateValue = (LiS8Object) handler.get(update);
-		if(baseValue == null && updateValue == null) {
-			return false;
-		}
-		else if ((baseValue != null && updateValue == null) || (baseValue == null && updateValue != null)) {
-			return true;
-		}
-		else {
-			return !scope.resolveId(baseValue).equals(scope.resolveId(updateValue));
-		}
+	public InterfaceLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		LiObject value = (LiObject) handler.get(object);
+		return new InterfaceLiFieldDelta(this, scope.resolveId(value));
 	}
 
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
-		LiS8Object value = (LiS8Object) handler.get(object);
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
+		LiObject value = (LiObject) handler.get(object);
 		if(value!=null) {
 			writer.write("(");
 			writer.write(value.getClass().getCanonicalName());
@@ -212,7 +204,7 @@ public class InterfaceLiField extends LiField {
 		return "S8Object";
 	}
 
-	public void setValue(Object object, LiS8Object struct) throws LiIOException {
+	public void setValue(Object object, LiObject struct) throws LiIOException {
 		handler.set(object, struct);
 	}
 
@@ -221,34 +213,8 @@ public class InterfaceLiField extends LiField {
 
 
 	@Override
-	public boolean isValueResolved(LiS8Object object) {
+	public boolean isValueResolved(LiObject object) {
 		return true; // always resolved at resolve step in shell
-	}
-
-
-
-	/**
-	 * 
-	 * @author pierreconvert
-	 *
-	 * @param <T>
-	 */
-	private class ObjectBinding implements BuildScope.Binding {
-
-		private Object object;
-
-		private String id;
-
-		public ObjectBinding(Object object, String id) {
-			super();
-			this.object = object;
-			this.id = id;
-		}
-
-		@Override
-		public void resolve(BuildScope scope) throws LiIOException {
-			handler.set(object, scope.retrieveObject(id));
-		}
 	}
 
 
@@ -267,16 +233,9 @@ public class InterfaceLiField extends LiField {
 	private class Inflow extends LiFieldParser {
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
+		public LiFieldDelta parseValue(ByteInflow inflow) throws IOException {
 			String id = inflow.getStringUTF8();
-			if(id != null) {
-				/* append bindings */
-				scope.appendBinding(new ObjectBinding(object, id));
-			}
-			else {
-				// set list
-				handler.set(object, null);	
-			}
+			return new InterfaceLiFieldDelta(getField(), id);
 		}
 
 
@@ -321,14 +280,9 @@ public class InterfaceLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			LiS8Object value = (LiS8Object) handler.get(object);
-			if(value != null) {
-				outflow.putStringUTF8(scope.resolveId(value));
-			}
-			else {
-				outflow.putStringUTF8(null);
-			}
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			String id = ((InterfaceLiFieldDelta) delta).index;
+			outflow.putStringUTF8(id);
 		}
 	}
 	/* </IO-outflow-section> */

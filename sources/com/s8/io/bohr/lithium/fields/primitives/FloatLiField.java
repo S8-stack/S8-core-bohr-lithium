@@ -8,10 +8,11 @@ import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
@@ -73,23 +74,21 @@ public class FloatLiField extends PrimitiveLiField {
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) {
 		weight.reportBytes(4);
 	}
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
 		float value = handler.getFloat(origin);
 		handler.setFloat(clone, value);
 	}
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws IOException {
-		float baseValue = handler.getFloat(base);
-		float updateValue = handler.getFloat(update);
-		return baseValue != updateValue;
+	public FloatLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		return new FloatLiFieldDelta(this, handler.getFloat(object));
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class FloatLiField extends PrimitiveLiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		writer.write(Float.toString(handler.getFloat(object)));
 	}
 
@@ -130,7 +129,7 @@ public class FloatLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public FloatLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+		public FloatLiFieldDelta parseValue(ByteInflow inflow) throws IOException {
 			return new FloatLiFieldDelta(getField(), deserialize(inflow));
 		}
 
@@ -174,8 +173,8 @@ public class FloatLiField extends PrimitiveLiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			serialize(outflow, handler.getFloat(object));
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			serialize(outflow, ((FloatLiFieldDelta) delta).value);
 		}
 
 		public abstract void serialize(ByteOutflow outflow, float value) throws IOException;

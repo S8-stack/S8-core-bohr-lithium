@@ -6,7 +6,7 @@ import java.io.Writer;
 import com.s8.io.bohr.atom.BOHR_Types;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.ResolveScope;
 
@@ -41,7 +41,7 @@ public abstract class CollectionLiField extends LiField {
 
 	public interface ItemConsumer {
 
-		public void consume(LiS8Object item) throws IOException;
+		public void consume(LiObject item) throws IOException;
 	}
 
 
@@ -65,7 +65,7 @@ public abstract class CollectionLiField extends LiField {
 		}
 
 		@Override
-		public void consume(LiS8Object item) throws IOException {
+		public void consume(LiObject item) throws IOException {
 			if(isInitialized) {
 				writer.write(" ,");	
 			}
@@ -87,8 +87,8 @@ public abstract class CollectionLiField extends LiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
-		LiS8Object[] array = (LiS8Object[]) handler.get(object);
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
+		LiObject[] array = (LiObject[]) handler.get(object);
 		if(array!=null) {
 			writer.write('[');
 			forEach(object, new Printer(scope, writer));

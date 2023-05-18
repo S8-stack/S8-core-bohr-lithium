@@ -2,7 +2,7 @@ package com.s8.io.bohr.lithium.fields.primitives;
 
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 
 
@@ -33,7 +33,7 @@ public class StringLiFieldDelta extends LiFieldDelta {
 
 
 	@Override
-	public void consume(LiS8Object object, BuildScope scope) throws LiIOException {
+	public void operate(LiObject object, BuildScope scope) throws LiIOException {
 		field.handler.setString(object, value);
 	}
 

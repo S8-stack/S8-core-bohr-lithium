@@ -15,10 +15,11 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties0T;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
@@ -148,20 +149,20 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) {
 		weight.reportInstance();
 		weight.reportBytes(4); // int ordinal
 	}
 
 
 	@Override
-	public void collectReferencedBlocks(LiS8Object object, Queue<String> references) {
+	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
 		//no blocks to collect
 	}
 
 
 	@Override
-	public void sweep(LiS8Object object, GraphCrawler crawler) {
+	public void sweep(LiObject object, GraphCrawler crawler) {
 		// nothing to collect
 	}
 
@@ -174,23 +175,22 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope rScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope rScope, LiObject clone, BuildScope scope) throws LiIOException {
 		Object value = handler.get(origin);
 		handler.set(clone, value);
 	}
 
 
+
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
-		Object baseValue = handler.get(base);
-		Object updateValue = handler.get(update);
-		return (baseValue!=null && !baseValue.equals(updateValue)) 
-				|| (baseValue==null && updateValue!=null);
+	public EnumLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		return new EnumLiFieldDelta(this, handler.get(object));
 	}
+
 	
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		Object value = handler.get(object);
 		if(value!=null) {
 			Enum<?> enumValue = (Enum<?>) value;
@@ -209,7 +209,7 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public boolean isValueResolved(LiS8Object object) {
+	public boolean isValueResolved(LiObject object) {
 		return true; // always resolved
 	}
 
@@ -236,8 +236,8 @@ public class EnumLiField extends LiField {
 		}
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public LiFieldDelta parseValue(ByteInflow inflow) throws IOException {
+			return new EnumLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 		public abstract Object deserialize(ByteInflow inflow) throws IOException;
@@ -301,8 +301,8 @@ public class EnumLiField extends LiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			serialize(outflow, handler.get(object));
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			serialize(outflow, ((EnumLiFieldDelta) delta).value);
 		}
 		
 

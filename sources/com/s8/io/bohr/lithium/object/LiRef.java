@@ -14,7 +14,7 @@ import com.s8.io.bytes.alpha.ByteOutflow;
  *
  * @param <T>
  */
-public final class LiS8Ref<T extends LiS8Object> {
+public final class LiRef {
 	
 	
 	/**
@@ -43,7 +43,7 @@ public final class LiS8Ref<T extends LiS8Object> {
 	
 	
 	
-	public LiS8Ref(String address, String branch, long version, int port) {
+	public LiRef(String address, String branch, long version, int port) {
 		super();
 		this.address = address;
 		this.branch = branch;
@@ -57,7 +57,7 @@ public final class LiS8Ref<T extends LiS8Object> {
 	 * @param right
 	 * @return
 	 */
-	public static boolean areEqual(LiS8Ref<?> left, LiS8Ref<?> right) {
+	public static boolean areEqual(LiRef left, LiRef right) {
 		if(left==null && right==null) {
 			return true;
 		}
@@ -75,13 +75,13 @@ public final class LiS8Ref<T extends LiS8Object> {
 	
 
 	
-	public static <T extends LiS8Object> LiS8Ref<T> read(ByteInflow inflow) throws IOException {
+	public static LiRef read(ByteInflow inflow) throws IOException {
 		String address = inflow.getStringUTF8();
 		if(address != null) {
 			String branch = inflow.getStringUTF8();
 			long version = inflow.getUInt7x();
 			int port = inflow.getUInt8();
-			return new LiS8Ref<T>(address, branch, version, port);
+			return new LiRef(address, branch, version, port);
 		}
 		else {
 			return null;
@@ -91,7 +91,7 @@ public final class LiS8Ref<T extends LiS8Object> {
 	
 
 	
-	public static void write(LiS8Ref<?> ref, ByteOutflow outflow) throws IOException {
+	public static void write(LiRef ref, ByteOutflow outflow) throws IOException {
 		if(ref != null) {
 			outflow.putStringUTF8(ref.address);
 			

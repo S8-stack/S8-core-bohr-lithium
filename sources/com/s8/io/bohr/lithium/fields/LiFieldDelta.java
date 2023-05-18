@@ -1,7 +1,7 @@
 package com.s8.io.bohr.lithium.fields;
 
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 
 
@@ -24,7 +24,7 @@ public abstract class LiFieldDelta {
 	 * @param object
 	 * @throws LthSerialException 
 	 */
-	public abstract void consume(LiS8Object object, BuildScope scope) throws LiIOException;
+	public abstract void operate(LiObject object, BuildScope scope) throws LiIOException;
 	
 	public abstract LiField getField();
 }

@@ -1,6 +1,8 @@
 package com.s8.io.bohr.lithium.branches;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import com.s8.io.bohr.atom.S8BuildException;
@@ -8,14 +10,14 @@ import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
-import com.s8.io.bohr.lithium.fields.LiFieldComposer;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
+import com.s8.io.bohr.lithium.object.CreateLiObjectDelta;
+import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.io.bohr.lithium.object.LiObjectDelta;
+import com.s8.io.bohr.lithium.object.UpdateLiObjectDelta;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
 import com.s8.io.bohr.lithium.type.LiType;
-import com.s8.io.bohr.lithium.type.LiTypeComposer;
-import com.s8.io.bohr.lithium.type.LiTypeParser;
 import com.s8.io.bohr.lithium.type.ResolveScope;
-import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
@@ -35,12 +37,12 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  */
 public class LiVertex {
 
-	
-	
-	public final LiBranch branch;
-	
 
-	
+
+	public final LiBranch branch;
+
+
+
 	/**
 	 * <h1>DO NOT USE THIS FIELD: SYSTEM ONLY</h1>
 	 * <p>
@@ -49,94 +51,68 @@ public class LiVertex {
 	 * </p>
 	 */
 	public final String id;
-	
-	
+
+
 	/**
 	 * 
 	 */
 	public final LiType type;
-	
-	
-
-	/**
-	 * The port used to expose this object
-	 */
-	public int port = -1;
 
 
-	
-	
-	/**
-	 * 
-	 */
-	public LiTypeParser typeParser;
-	
-	
-	/**
-	 * 
-	 */
-	public LiTypeComposer typeComposer;
-	
-	
-	
+
+
+
 	private boolean isUnpublished = false;
 	/**
 	 * 
 	 */
 	private boolean isCreateUnpublished = false;
-	
-	
-	public final LiS8Object object;
-	
+
+
+	public final LiObject object;
+
 	/**
 	 * 
 	 */
 	public final boolean[] hasFieldUnpublishedChange;
-	
-	
+
+
 	/**
 	 * 
 	 * @param type
 	 * @param object
 	 * @throws IOException 
 	 */
-	public LiVertex(LiBranch branch, String id, LiS8Object object) throws LiIOException {
+	public LiVertex(LiBranch branch, String id, LiObject object) throws LiIOException {
 		super();
 		this.branch = branch;
 		this.id = id;
-		
+
 		LiType type = branch.codebase.getType(object);
 		if(type == null) {
 			throw new LiIOException("Type "+object.getClass().getName()+" is unknown from this branch codebase.");
 		}
 		this.type = type;
-		
+
 		this.object = object;
-		
+
 		int nFields = type.getNumberOfFields();
 		this.hasFieldUnpublishedChange = new boolean[nFields];
 		for(int i = 0; i < nFields; i++) { hasFieldUnpublishedChange[i] = true; }
-		
-		
+
+
 		isUnpublished = true;
-		
+
 		isCreateUnpublished = true;
 	}
-	
-	
-	
-	public LiS8Object getObject() {
+
+
+
+	public LiObject getObject() {
 		return object;
 	}
-	
-	
-	
-	public LiType getType() throws LiIOException {
-		if(typeComposer == null) {
-			typeComposer = branch.outbound.getComposer(object.getClass());
-		}
-		return typeComposer.type;
-	}
+
+
 
 	/**
 	 * 
@@ -145,59 +121,49 @@ public class LiVertex {
 	 * @throws S8ShellStructureException 
 	 */
 	public void sweep(GraphCrawler crawler) throws IOException, S8ShellStructureException {
-		getType().sweep(object, crawler);
+		type.sweep(object, crawler);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 
 	 * @param references
 	 * @throws IOException
 	 */
 	public void sweepReferences(Queue<String> references) {
-		try {
-			getType().collectReferencedBlocks(object, references);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}	
+		type.collectReferencedBlocks(object, references);	
 	}
-	
-	
+
+
 	public void getByteCount(MemoryFootprint footprint) {
-		try {
-			getType().computeFootprint(object, footprint);
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+		type.computeFootprint(object, footprint);
 	}
-	
-	
-	
+
+
+
 	public void reportChange(String fieldName) throws LiIOException {
-		
+
 		LiField field = type.getFieldByName(fieldName);
 		if(field == null) {
 			throw new LiIOException("Field "+fieldName+" is unknown from this object type");
 		}
-		
-	
+
+
 		// update field
 		hasFieldUnpublishedChange[field.ordinal] = true;
-		
-	
+
+
 		// internal notification schema
 		if(!isUnpublished) {
-			branch.outbound.reportCreate(this);
+			branch.reportCreate(this);
 			isUnpublished = true;
 		}
 	}
 
 
 
-	
+
 	/**
 	 * 
 	 * @param outflow
@@ -206,62 +172,53 @@ public class LiVertex {
 	 * @throws IOException 
 	 * @throws S8Exception 
 	 */
-	public void publish(ByteOutflow outflow) throws S8BuildException, IOException, S8Exception {
+	public void publish( List<LiObjectDelta> objectDeltas, ResolveScope scope) throws S8BuildException, IOException, S8Exception {
 
 		if(isUnpublished) {
 
-			LiOutbound outbound = branch.outbound;
-			
-			// type composer
-			if(typeComposer == null) {
-				typeComposer = outbound.getComposer(object.getClass());
-			}
-			
+
 			/* publish header */
+
+			List<LiFieldDelta> fieldDeltas = new ArrayList<>();
 			if(isCreateUnpublished) {
-				typeComposer.publish_CREATE_NODE(outflow, id);
+				objectDeltas.add(new CreateLiObjectDelta(id, type, fieldDeltas));
 				isCreateUnpublished = false;
 			}
 			else {
-				typeComposer.publish_UPDATE_NODE(outflow, id);
+				objectDeltas.add(new UpdateLiObjectDelta(id, type, fieldDeltas));
 			}
-			
-			
+
+
 			/* <fields> */
 
-			LiFieldComposer[] fieldComposers = typeComposer.fieldComposers;
-			int nFields = fieldComposers.length;
 
-			ResolveScope resolveScope = branch.resolveScope;
-			
-			for(int ordinal=0; ordinal < nFields; ordinal++) {
+			int nFields = type.getNumberOfFields();
 
-				LiFieldComposer fieldComposer = fieldComposers[ordinal];
-				if(hasFieldUnpublishedChange[ordinal]) {
+			for(int i=0; i < nFields; i++) {
+				if(hasFieldUnpublishedChange[i]) {
 
 					// output field encoding
-					fieldComposer.compose(object, outflow, resolveScope);
-					
-					hasFieldUnpublishedChange[ordinal] = false; // consume flag
+					fieldDeltas.add(type.getField(i).produceDiff(object, scope));
+
+					hasFieldUnpublishedChange[i] = false; // consume flag
 				}		
 			}
-			
-			
-			
+
+
+
+
 			/* clear event */
 			clearUpdateEvents();
-			 
+
 			/* </fields> */
 
-			typeComposer.publishCloseNode(outflow);
-		
 			// all changes now published, so clear flags
 			isUnpublished = false;
 		}
 	}
 
-	
-	
+
+
 	public LiBranch getBranch() {
 		return branch;
 	}
@@ -271,5 +228,5 @@ public class LiVertex {
 		int n = hasFieldUnpublishedChange.length;
 		for(int i = 0; i<n; i++) { hasFieldUnpublishedChange[i] = false; }
 	}
-	
+
 }

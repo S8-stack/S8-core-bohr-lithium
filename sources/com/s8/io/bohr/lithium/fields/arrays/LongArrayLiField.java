@@ -8,11 +8,12 @@ import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.fields.primitives.PrimitiveLiField;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
@@ -74,7 +75,7 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) throws LiIOException {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) throws LiIOException {
 		long[] array = (long[]) handler.get(object);
 		if(array!=null) {
 			weight.reportInstance(); // the array object itself	
@@ -84,18 +85,16 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
 		long[] array = (long[]) handler.get(origin);
 		handler.set(clone, clone(array));
 	}
 
-	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws LiIOException {
-		long[] baseValue = (long[]) handler.get(base);
-		long[] updateValue = (long[]) handler.get(update);
-		return !areEqual(baseValue, updateValue);
-	}
 	
+	@Override
+	public LongArrayLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		return new LongArrayLiFieldDelta(this, (long[]) handler.get(object));
+	}
 
 	@Override
 	public void DEBUG_print(String indent) {
@@ -124,30 +123,10 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 
 
 
-	private boolean areEqual(long[] array0, long[] array1) {
-
-		// check nulls
-		if(array0 == null) { return array1==null; }
-		if(array1 == null) { return array0==null; }
-
-		// check lengths
-		int n0 = array0.length;
-		int n1 = array1.length;
-		if(n0!=n1) { return false; }
-
-		// check values
-		for(int i=0; i<n0; i++) {
-			if(array0[i]!=array1[i]) { return false; }
-		}
-		return true;
-	}
-
-
-
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		long[] array = (long[]) handler.get(object);
 		if(array!=null) {
 			boolean isInitialized = false;
@@ -208,7 +187,7 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 		}
 
 		@Override
-		public LongArrayLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+		public LongArrayLiFieldDelta parseValue(ByteInflow inflow) throws IOException {
 			return new LongArrayLiFieldDelta(getField(), deserialize(inflow));
 		}
 
@@ -341,9 +320,10 @@ public class LongArrayLiField extends PrimitiveArrayLiField {
 
 		public @Override LongArrayLiField getField() { return LongArrayLiField.this; }
 
+		
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			serialize(outflow, (long[]) handler.get(object));
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			serialize(outflow, ((LongArrayLiFieldDelta) delta).value);
 		}
 		
 

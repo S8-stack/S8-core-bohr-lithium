@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.branches.LiVertex;
-import com.s8.io.bohr.lithium.fields.LiField;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 
 
 /**
@@ -43,7 +41,7 @@ public class DebugModule {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void print(LiS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(LiObject object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		
 		// advertise class
 		writer.write('(');
@@ -66,58 +64,4 @@ public class DebugModule {
 
 
 
-	/**
-	 * 
-	 * @param value
-	 * @param inflow
-	 * @param scope
-	 * @throws IOException
-	 * @throws S8ShellStructureException 
-	 */
-	public void deepCompare(LiS8Object left, LiS8Object right, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
-
-		if(left!=null && right==null) {
-			// advertise class
-			writer.write('(');
-			writer.write(left.getClass().getCanonicalName());
-			writer.write(") is now null");
-		}
-		else if(left==null && right!=null) {
-			// advertise class
-			writer.write('(');
-			writer.write(right.getClass().getCanonicalName());
-			writer.write(") is now non-null");
-		}
-		else {
-			boolean hasDiff = !left.getClass().equals(right.getClass());
-			int nFields = type.fields.length, i=0;
-			while(!hasDiff && i<nFields) {
-				hasDiff = type.fields[i].hasDiff(left, right, scope);
-				i++;
-			}
-
-			if(hasDiff) {
-				// advertise class
-				writer.write('(');
-				writer.write(left.getClass().getCanonicalName());
-				writer.write(')');
-
-				// adevrtise index
-				writer.write(" index="+((LiVertex) left.S8_vertex).id);
-				writer.write(" {\n");
-
-				// loop through fields
-				for(int i2=0; i2<nFields; i2++) {
-					LiField field = type.fields[i2];
-					if(field.hasDiff(left, right, scope)) {
-						writer.append('\t');
-						field.print(left, scope, writer);
-						field.print(right, scope, writer);
-						writer.append('\n');	
-					}
-				}
-				writer.write("}\n");		
-			}
-		}
-	}
 }

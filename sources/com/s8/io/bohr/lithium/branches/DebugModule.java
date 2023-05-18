@@ -3,10 +3,9 @@ package com.s8.io.bohr.lithium.branches;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.io.bohr.atom.S8Graph;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.ResolveScope;
 
@@ -28,60 +27,7 @@ public class DebugModule {
 	
 
 
-	/**
-	 * 
-	 * @throws S8ShellStructureException 
-	 * @throws IOException 
-	 */
-	public void deepCompare(LiBranch update, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
-		
-		writer.write("\n<delta-tracking:>\n");
-		//shell.remap();
-		//update.remap();
-		
-		update.vertices.forEach((index, vertex) -> {
-			try {
-				LiType type = vertex.getType();
-				
-				LiVertex baseVertex = branch.vertices.get(index);
-				if(baseVertex==null || !baseVertex.getType().getSerialName().equals(type.getSerialName())) {
-					writer.append("Object replacement");
-				}
-				else {
-					LiS8Object baseObject = baseVertex.getObject();
-					type.deepCompare(baseObject, vertex.getObject(), scope, writer);	
-				}
-			} 
-			catch (LiIOException e) {
-				e.printStackTrace();
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			} 
-			catch (S8ShellStructureException e) {
-				e.printStackTrace();
-			}
-		});
-		
-		
-		
-		for(int slot=0; slot<S8Graph.EXPOSURE_RANGE; slot++) {
-			LiVertex vertex = update.exposure[slot], baseVertex = branch.exposure[slot];
-			if(vertex != null) {
-				if(!baseVertex.id.equals(vertex.id)) {
-					try {
-						writer.append("Exposed entry "+slot+" is remapped to");
-					} 
-					catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		writer.write("</delta-tracking>\n");
-		writer.append("DEEP COMPARE TERMINATED!\n");
-	}
+	
 	
 	/**
 	 * 
@@ -93,8 +39,8 @@ public class DebugModule {
 		
 		branch.vertices.forEach((index, vertex) -> {
 			try {
-				LiType type = vertex.getType();
-				LiS8Object object = vertex.getObject();
+				LiType type = vertex.type;
+				LiObject object = vertex.getObject();
 				type.print(object, scope, writer);
 			} 
 			catch (LiIOException e) {

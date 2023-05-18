@@ -13,7 +13,7 @@ import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
@@ -75,12 +75,12 @@ public class BooleanLiField extends PrimitiveLiField {
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) {
 		weight.reportBytes(1);
 	}
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
 		boolean value = handler.getBoolean(origin);
 		handler.setBoolean(clone, value);
 	}
@@ -92,23 +92,14 @@ public class BooleanLiField extends PrimitiveLiField {
 
 
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws IOException {
-		boolean baseValue = handler.getBoolean(base);
-		boolean updateValue = handler.getBoolean(update);
-		return baseValue != updateValue;
-	}
-	
-
-
-	@Override
-	public BooleanLiFieldDelta produceDiff(LiS8Object object) throws IOException {
+	public BooleanLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
 		return new BooleanLiFieldDelta(this, handler.getBoolean(object));
 	}
 	
 
 	
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		writer.write(Boolean.toString(handler.getBoolean(object)));
 	}
 
@@ -140,7 +131,7 @@ public class BooleanLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public BooleanLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+		public BooleanLiFieldDelta parseValue(ByteInflow inflow) throws IOException {
 			return new BooleanLiFieldDelta(BooleanLiField.this, inflow.getBool8());
 		}
 	}

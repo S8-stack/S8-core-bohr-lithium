@@ -46,7 +46,7 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
  * 
  */
 @S8ObjectType(name = "alpha/S8Object", sub= {})
-public class LiS8Object {
+public class LiObject {
 	
 	
 	/* <field-properties> */
@@ -67,7 +67,7 @@ public class LiS8Object {
 	 * Perform initial binding of object with vertex, vertex itself being bound to its shell
 	 * @param graph
 	 */
-	public LiS8Object() {
+	public LiObject() {
 	}
 	
 	

@@ -3,7 +3,7 @@
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 
 
 
@@ -20,7 +20,7 @@ import com.s8.io.bohr.lithium.object.LiS8Object;
 		MyCommercialFloor.class,
 		MyEmptyFloor.class
 })
-public abstract class MyFloor extends LiS8Object {
+public abstract class MyFloor extends LiObject {
 
 	public final static long HAS_CHANGED = 0x02;
 

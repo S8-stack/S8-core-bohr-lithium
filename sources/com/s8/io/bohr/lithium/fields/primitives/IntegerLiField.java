@@ -8,10 +8,11 @@ import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
@@ -70,24 +71,22 @@ public class IntegerLiField extends PrimitiveLiField {
 	}
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) {
 		weight.reportBytes(4);
 	}
 
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
 		int value = handler.getInteger(origin);
 		handler.setInteger(clone, value);
 	}
 
+	
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope resolveScope) throws IOException {
-		int baseValue = handler.getInteger(base);
-		int updateValue = handler.getInteger(update);
-		return baseValue != updateValue;
+	public IntegerLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+		return new IntegerLiFieldDelta(this, handler.getInteger(object));
 	}
-
 
 	@Override
 	public void DEBUG_print(String indent) {
@@ -97,7 +96,7 @@ public class IntegerLiField extends PrimitiveLiField {
 
 
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		writer.write(Long.toString(handler.getLong(object)));
 	}
 
@@ -133,7 +132,7 @@ public class IntegerLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public IntegerLiFieldDelta parseValue(ByteInflow inflow, BuildScope scope) throws IOException {
+		public IntegerLiFieldDelta parseValue(ByteInflow inflow) throws IOException {
 			return new IntegerLiFieldDelta(getField(), deserialize(inflow));
 		}
 		
@@ -213,8 +212,8 @@ public class IntegerLiField extends PrimitiveLiField {
 
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			serialize(outflow, handler.getInteger(object));
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			serialize(outflow, ((IntegerLiFieldDelta) delta).value);
 		}
 
 		public abstract void serialize(ByteOutflow outflow, int value) throws IOException;

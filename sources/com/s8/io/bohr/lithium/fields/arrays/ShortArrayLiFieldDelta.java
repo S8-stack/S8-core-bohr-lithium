@@ -3,7 +3,7 @@ package com.s8.io.bohr.lithium.fields.arrays;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 
 /**
@@ -30,7 +30,7 @@ public class ShortArrayLiFieldDelta extends LiFieldDelta {
 	public @Override LiField getField() { return field; }
 
 	@Override
-	public void consume(LiS8Object object, BuildScope scope) throws LiIOException {
+	public void operate(LiObject object, BuildScope scope) throws LiIOException {
 		field.handler.set(object, value);
 	}
 

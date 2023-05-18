@@ -7,7 +7,6 @@ import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -19,13 +18,13 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  */
 public abstract class LiObjectDelta {
 
-	public final String index;
+	public final String id;
 
 
 
 	public LiObjectDelta(String index) {
 		super();
-		this.index = index;
+		this.id = index;
 	}
 
 
@@ -36,7 +35,7 @@ public abstract class LiObjectDelta {
 	 * @throws NdIOException 
 	 * @throws IOException 
 	 */
-	public abstract void consume(LiBranch branch, BuildScope scope) throws LiIOException;
+	public abstract void operate(LiBranch branch, BuildScope scope) throws LiIOException;
 
 	
 	/**
@@ -48,9 +47,4 @@ public abstract class LiObjectDelta {
 	public abstract void serialize(LiOutbound outbound, ByteOutflow outflow) throws IOException;
 
 	
-	/**
-	 * 
-	 * @param weight
-	 */
-	public abstract void computeFootprint(MemoryFootprint weight);
 }

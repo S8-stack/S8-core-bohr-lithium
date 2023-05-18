@@ -5,9 +5,11 @@ import static com.s8.io.bohr.atom.BOHR_Keywords.DECLARE_FIELD;
 import static com.s8.io.bohr.atom.BOHR_Keywords.SET_VALUE;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bytes.alpha.ByteInflow;
 
@@ -100,7 +102,7 @@ public class LiTypeParser {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void parse(ByteInflow inflow, DeltaListener listener) throws IOException {
+	public void parse(ByteInflow inflow, List<LiFieldDelta> fieldDeltas) throws IOException {
 
 		// code, fieldCode
 		int code, fieldCode;
@@ -143,7 +145,7 @@ public class LiTypeParser {
 				fieldParser = fields[fieldCode];
 
 				// call back to listener
-				listener.onFieldValueChange(fieldParser, inflow);
+				fieldDeltas.add(fieldParser.parseValue(inflow));
 
 				break;
 

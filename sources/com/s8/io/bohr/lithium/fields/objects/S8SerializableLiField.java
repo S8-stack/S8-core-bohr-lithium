@@ -18,10 +18,11 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
+import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiS8Object;
+import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties0T;
 import com.s8.io.bohr.lithium.type.BuildScope;
@@ -156,13 +157,13 @@ public class S8SerializableLiField extends LiField {
 
 
 	@Override
-	public void sweep(LiS8Object object, GraphCrawler crawler) {
+	public void sweep(LiObject object, GraphCrawler crawler) {
 		// no sweep
 	}
 
 
 	@Override
-	public void collectReferencedBlocks(LiS8Object object, Queue<String> references) {
+	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
 		// No ext references
 	}
 
@@ -171,7 +172,7 @@ public class S8SerializableLiField extends LiField {
 
 
 	@Override
-	public void computeFootprint(LiS8Object object, MemoryFootprint weight) throws LiIOException {
+	public void computeFootprint(LiObject object, MemoryFootprint weight) throws LiIOException {
 		BohrSerializable value = (BohrSerializable) handler.get(object);
 		if(value!=null) {
 			weight.reportInstance();
@@ -180,7 +181,7 @@ public class S8SerializableLiField extends LiField {
 	}
 
 	@Override
-	public void deepClone(LiS8Object origin, ResolveScope resolveScope, LiS8Object clone, BuildScope scope) throws LiIOException {
+	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
 		BohrSerializable value = (BohrSerializable) handler.get(origin);
 		handler.set(clone, value.deepClone());
 	}
@@ -191,17 +192,16 @@ public class S8SerializableLiField extends LiField {
 		System.out.println(indent+name+": (ByteSerializableFieldHandler)");
 	}
 
-	
+
 	@Override
-	public boolean hasDiff(LiS8Object base, LiS8Object update, ResolveScope scope) throws LiIOException {
-		BohrSerializable baseValue = (BohrSerializable) handler.get(base);
-		BohrSerializable updateValue = (BohrSerializable) handler.get(update);
-		return (baseValue!=null && !baseValue.equals(updateValue)) || (baseValue==null && updateValue!=null);
+	public LiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws LiIOException {
+		return new S8SerializableLiFieldDelta(this, (BohrSerializable) handler.get(object));
 	}
 
 
+
 	@Override
-	protected void printValue(LiS8Object object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
 		Object value = handler.get(object);
 		if(value!=null) {
 			writer.write("(");
@@ -222,7 +222,7 @@ public class S8SerializableLiField extends LiField {
 
 
 	@Override
-	public boolean isValueResolved(LiS8Object object) {
+	public boolean isValueResolved(LiObject object) {
 		return true; // always resolved at resolve step in shell
 	}
 	
@@ -252,8 +252,8 @@ public class S8SerializableLiField extends LiField {
 	private class Parser extends LiFieldParser {
 
 		@Override
-		public void parseValue(LiS8Object object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
+		public LiFieldDelta parseValue(ByteInflow inflow) throws IOException {
+			return new S8SerializableLiFieldDelta(getField(), deserialize(inflow));
 		}
 
 
@@ -308,8 +308,8 @@ public class S8SerializableLiField extends LiField {
 		}
 
 		@Override
-		public void composeValue(LiS8Object object, ByteOutflow outflow, ResolveScope scope) throws IOException {
-			BohrSerializable value = (BohrSerializable) handler.get(object);
+		public void composeValue(LiFieldDelta delta, ByteOutflow outflow) throws IOException {
+			BohrSerializable value = ((S8SerializableLiFieldDelta) delta).value;
 			if(value != null) {
 				outflow.putUInt8(BOHR_Properties.IS_NON_NULL_PROPERTIES_BIT);
 				value.serialize(outflow);
