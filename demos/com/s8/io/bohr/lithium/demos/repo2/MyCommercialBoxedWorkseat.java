@@ -17,9 +17,9 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 public class MyCommercialBoxedWorkseat extends MyCommercialFloorElement {
 
 
-	public @S8Field(name = "x-deck-dimension", mask = HAS_CHANGED) double xDeckDimension;
+	public @S8Field(name = "x-deck-dimension") double xDeckDimension;
 
-	public @S8Field(name = "y-deck-dimension", mask = HAS_CHANGED) double yDeckDimension;
+	public @S8Field(name = "y-deck-dimension") double yDeckDimension;
 
 
 	public MyCommercialBoxedWorkseat() {

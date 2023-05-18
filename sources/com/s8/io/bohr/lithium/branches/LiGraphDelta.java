@@ -113,6 +113,7 @@ public class LiGraphDelta {
 		for(LiObjectDelta objectDelta : objectDeltas) { 
 			objectDelta.operate(branch, scope); 
 		}
+		scope.process();
 		
 		/* increment version of graph */
 		branch.version++;

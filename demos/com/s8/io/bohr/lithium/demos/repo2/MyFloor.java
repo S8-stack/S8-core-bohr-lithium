@@ -22,18 +22,16 @@ import com.s8.io.bohr.lithium.object.LiObject;
 })
 public abstract class MyFloor extends LiObject {
 
-	public final static long HAS_CHANGED = 0x02;
 
+	public @S8Field(name = "x0") double x0;
 
-	public @S8Field(name = "x0", mask = HAS_CHANGED) double x0;
+	public @S8Field(name = "x1") double x1;
 
-	public @S8Field(name = "x1", mask = HAS_CHANGED) double x1;
+	public @S8Field(name = "y0") double y0;
 
-	public @S8Field(name = "y0", mask = HAS_CHANGED) double y0;
+	public @S8Field(name = "y1") double y1;
 
-	public @S8Field(name = "y1", mask = HAS_CHANGED) double y1;
-
-	public @S8Field(name = "ceiling-height", mask = HAS_CHANGED) double ceilingHeight;
+	public @S8Field(name = "ceiling-height") double ceilingHeight;
 
 	
 	public enum Face {
@@ -44,11 +42,23 @@ public abstract class MyFloor extends LiObject {
 	
 
 	
+	
+	
 
 	public MyFloor() {
 		super();
 	}
 
+
+	public void baseInit() throws LiIOException {
+		x0 = Math.random()*100;
+		x1 = x0 + Math.random()*100;
+		y0 = Math.random()*100;
+		y1 = y0 + Math.random()*100;
+		ceilingHeight = Math.random();
+		
+		reportFieldUpdates("x0", "x1", "y0", "y1", "ceiling-height");
+	}
 	
 
 	public static MyFloor create() throws LiIOException {

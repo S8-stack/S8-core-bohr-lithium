@@ -5,6 +5,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.io.bohr.atom.S8BuildException;
+import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.LiObject;
@@ -170,9 +172,16 @@ public class LiBranch implements LiGraphDeltaConsumer {
 		debugModule.print(graph.resolveScope, writer);
 	}
 
-
-
-
+	
+	/**
+	 * 
+	 * @throws S8BuildException
+	 * @throws S8Exception
+	 * @throws IOException
+	 */
+	public void save() throws S8BuildException, S8Exception, IOException {
+		deltas.add(graph.produceDiff());
+	}
 
 
 }

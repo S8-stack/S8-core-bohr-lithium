@@ -1,8 +1,12 @@
 package com.s8.io.bohr.lithium.demos;
 
+import java.util.List;
+
 import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.branches.LiGraphDelta;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.demos.repo2.MyBuilding;
+import com.s8.io.bohr.lithium.exceptions.LiIOException;
 
 public class LiTest02 {
 
@@ -16,6 +20,21 @@ public class LiTest02 {
 		LiBranch branch = new LiBranch("com.toto.123.098", "master", codebase);
 		branch.expose(2, building);
 		
+		
+		building.variate();
+		System.out.println("val 0:"+building.upperGroundFloors.get(4).y0);
+		
+		branch.save();
+		List<LiGraphDelta> deltas = branch.pullDeltas();
+		
+		LiBranch branch2 = new LiBranch("com.toto.123.098", "master", codebase);
+		deltas.forEach(d -> {
+			try { branch2.pushDelta(d); }catch (LiIOException e) { e.printStackTrace(); }
+		});
+		
+		MyBuilding b2 = (MyBuilding) branch2.getExposed(2);
+		
+		System.out.println("val 0:"+b2.upperGroundFloors.get(4).y0);
 		
 	}
 

@@ -44,7 +44,7 @@ public abstract class BuildScope {
 	 * 
 	 * @throws LthSerialException
 	 */
-	public void resolve() throws LiIOException {
+	public void process() throws LiIOException {
 
 		// screen all bindings
 		for(Binding binding : bindings) {

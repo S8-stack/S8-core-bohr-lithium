@@ -307,7 +307,7 @@ public class S8ObjectListLiField<T extends LiObject> extends CollectionLiField {
 				T itemObject = list.get(i);
 				
 				if(itemObject!=null) {
-					identifiers[i] = scope.resolveId(object);
+					identifiers[i] = scope.resolveId(itemObject);
 				}
 				else {
 					identifiers[i] = null;

@@ -24,25 +24,24 @@ import com.s8.io.bohr.lithium.object.LiObject;
 public abstract class MyCommercialFloorElement extends LiObject {
 	
 
-	public final static long HAS_CHANGED = 0x02;
 
-	public @S8Field(name = "tag", mask = HAS_CHANGED) String tag;
+	public @S8Field(name = "tag") String tag;
 	
-	public @S8Field(name = "x0", mask = HAS_CHANGED) double x0;
+	public @S8Field(name = "x0") double x0;
 
-	public @S8Field(name = "x1", mask = HAS_CHANGED) double x1;
+	public @S8Field(name = "x1") double x1;
 
-	public @S8Field(name = "y0", mask = HAS_CHANGED) double y0;
+	public @S8Field(name = "y0") double y0;
 
-	public @S8Field(name = "y1", mask = HAS_CHANGED) double y1;
+	public @S8Field(name = "y1") double y1;
 
-	public @S8Field(name = "door-location-face", mask = HAS_CHANGED) MyFloor.Face doorLocationFace;
+	public @S8Field(name = "door-location-face") MyFloor.Face doorLocationFace;
 	
 	
 	/**
 	 * Must be between 0 and 1
 	 */
-	public @S8Field(name = "door-location-coordinate", mask = HAS_CHANGED) double doorLocationCoordinate;
+	public @S8Field(name = "door-location-coordinate") double doorLocationCoordinate;
 	
 	
 	public MyCommercialFloorElement() {
@@ -55,6 +54,7 @@ public abstract class MyCommercialFloorElement extends LiObject {
 		x1 = x0 + Math.random()*100;
 		y0 = Math.random()*100;
 		y1 = y0 + Math.random()*100;
+		
 		
 		doorLocationFace = MyFloor.Face.values()[(int) (Math.random()*4)];
 		doorLocationCoordinate = Math.random();

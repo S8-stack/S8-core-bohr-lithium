@@ -203,7 +203,7 @@ public class LiGraph {
 	 * @throws S8Exception 
 	 * @throws S8BuildException 
 	 */
-	public LiGraphDelta compose() throws S8BuildException, S8Exception, IOException {
+	public LiGraphDelta produceDiff() throws S8BuildException, S8Exception, IOException {
 
 		if(!hasUnpublishedChanges) {
 			// TODO

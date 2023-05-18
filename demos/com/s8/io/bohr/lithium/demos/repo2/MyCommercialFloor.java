@@ -22,7 +22,7 @@ public class MyCommercialFloor extends MyFloor {
 	
 	
 	
-	public  @S8Field(name = "elements", mask = HAS_CHANGED) List<MyCommercialFloorElement> elements;
+	public  @S8Field(name = "elements") List<MyCommercialFloorElement> elements;
 	
 	
 	public MyCommercialFloor() {
@@ -32,6 +32,8 @@ public class MyCommercialFloor extends MyFloor {
 	
 	@Override
 	public void init() throws LiIOException {
+		baseInit();
+		
 		int n = (int) (Math.random()*12) + 4;
 		elements = new ArrayList<>();
 		for(int i=0; i<n; i++) {
