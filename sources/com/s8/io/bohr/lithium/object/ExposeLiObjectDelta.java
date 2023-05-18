@@ -3,7 +3,7 @@ package com.s8.io.bohr.lithium.object;
 import java.io.IOException;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.branches.LiVertex;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
@@ -44,12 +44,12 @@ public class ExposeLiObjectDelta extends LiObjectDelta {
 
 
 	@Override
-	public void operate(LiBranch branch, BuildScope scope) throws LiIOException {
+	public void operate(LiGraph graph, BuildScope scope) throws LiIOException {
 		
 		/* retrieve vertex */
-		LiVertex vertex = branch.getVertex(id);
+		LiVertex vertex = graph.getVertex(id);
 		
-		branch.expose(slot, vertex.object);
+		graph.expose(slot, vertex.object);
 	}
 	
 

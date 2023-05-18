@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
@@ -62,7 +62,7 @@ public class CreateLiObjectDelta extends LiObjectDelta {
 
 
 	@Override
-	public void operate(LiBranch branch, BuildScope scope) throws LiIOException {
+	public void operate(LiGraph graph, BuildScope scope) throws LiIOException {
 
 		// create object
 		LiObject object = type.createNewInstance();
@@ -72,7 +72,7 @@ public class CreateLiObjectDelta extends LiObjectDelta {
 		for(LiFieldDelta delta : deltas) { delta.operate(object, scope); }
 
 		/* append */
-		branch.append(id, object);
+		graph.append(id, object);
 		
 	}
 

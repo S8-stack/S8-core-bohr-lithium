@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
@@ -40,6 +39,8 @@ import com.s8.io.bytes.alpha.ByteInflow;
  */
 public class LiInbound {
 
+	
+	
 
 
 
@@ -78,10 +79,10 @@ public class LiInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void pullFrame(ByteInflow inflow, Queue<LiBranchDelta> sequence) throws IOException {
+	public void pullFrame(ByteInflow inflow, LiGraphDeltaConsumer consumer) throws IOException {
 		// check opening
 		if(!inflow.matches(FRAME_HEADER)) { throw new IOException("DO NOT MATCH HEADER"); }
-		parseSequence(inflow, sequence);
+		parseSequence(inflow, consumer);
 		if(!inflow.matches(FRAME_FOOTER)) { throw new IOException("DO NOT MATCH FOOTER"); }
 	}
 	
@@ -91,7 +92,7 @@ public class LiInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void parseSequence(ByteInflow inflow, Queue<LiBranchDelta> sequence) throws IOException {
+	public void parseSequence(ByteInflow inflow, LiGraphDeltaConsumer consumer) throws IOException {
 
 		int code;
 
@@ -105,9 +106,9 @@ public class LiInbound {
 			case OPEN_JUMP: 
 				long version = inflow.getUInt64();
 				
-				LiBranchDelta branchDelta = new LiBranchDelta(version);
-				parseBranchDelta(inflow, branchDelta);
-				sequence.add(branchDelta);
+				LiGraphDelta graphDelta = new LiGraphDelta(version);
+				parseGraphDelta(inflow, graphDelta);
+				consumer.pushDelta(graphDelta);
 				break;
 
 			default : throw new IOException("Unsupported BOHR keyword code: "+Integer.toHexString(code));
@@ -143,7 +144,7 @@ public class LiInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void parseBranchDelta(ByteInflow inflow, LiBranchDelta delta) throws IOException {
+	public void parseGraphDelta(ByteInflow inflow, LiGraphDelta delta) throws IOException {
 
 
 		int code;
@@ -208,7 +209,7 @@ public class LiInbound {
 	}
 		
 	
-	public void onCreateNode(ByteInflow inflow, LiBranchDelta branchDelta) throws IOException {
+	public void onCreateNode(ByteInflow inflow, LiGraphDelta branchDelta) throws IOException {
 
 		/* type code */
 		long typeCode = inflow.getUInt7x();
@@ -235,7 +236,7 @@ public class LiInbound {
 
 	
 	
-	public void onUpdateNode(ByteInflow inflow, LiBranchDelta branchDelta) throws IOException {
+	public void onUpdateNode(ByteInflow inflow, LiGraphDelta branchDelta) throws IOException {
 		
 		String id = inflow.getStringUTF8();
 		
@@ -257,7 +258,7 @@ public class LiInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void onExposeNode(ByteInflow inflow, LiBranchDelta branchDelta) throws IOException {
+	public void onExposeNode(ByteInflow inflow, LiGraphDelta branchDelta) throws IOException {
 		String id = inflow.getStringUTF8();
 		int slot = inflow.getUInt8();
 		branchDelta.appendObjectDelta(new ExposeLiObjectDelta(id, slot));
@@ -267,19 +268,19 @@ public class LiInbound {
 	
 
 	
-	public void onRemoveNode(ByteInflow inflow, LiBranchDelta branchDelta) throws IOException {
+	public void onRemoveNode(ByteInflow inflow, LiGraphDelta branchDelta) throws IOException {
 		
 		String id = inflow.getStringUTF8();
 		branchDelta.appendObjectDelta(new RemoveLiObjectDelta(id));
 	}
 
 	
-	public void onDefineComment(String comment, LiBranchDelta branchDelta) throws LiIOException {
+	public void onDefineComment(String comment, LiGraphDelta branchDelta) throws LiIOException {
 		branchDelta.setComment(comment);
 	}
 
 	
-	public void onTimestamp(long t, LiBranchDelta branchDelta) throws LiIOException {
+	public void onTimestamp(long t, LiGraphDelta branchDelta) throws LiIOException {
 		branchDelta.setTimestamp(t);
 	}
 }

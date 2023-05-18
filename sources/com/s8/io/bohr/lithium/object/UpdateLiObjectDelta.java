@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
 import com.s8.io.bohr.atom.S8Exception;
-import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.branches.LiVertex;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
@@ -76,11 +76,11 @@ public class UpdateLiObjectDelta extends LiObjectDelta {
 
 
 	@Override
-	public void operate(LiBranch branch, BuildScope scope) {
+	public void operate(LiGraph graph, BuildScope scope) {
 
 		try {
 			// retrieve vertex
-			LiVertex vertex = branch.getVertex(id);
+			LiVertex vertex = graph.getVertex(id);
 
 			if(vertex==null) {
 				throw new S8Exception("failed to retrieve vertex for index: "+id);

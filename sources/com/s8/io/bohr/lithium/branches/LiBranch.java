@@ -2,21 +2,12 @@ package com.s8.io.bohr.lithium.branches;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.s8.io.bohr.atom.S8BuildException;
-import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.ExposeLiObjectDelta;
 import com.s8.io.bohr.lithium.object.LiObject;
-import com.s8.io.bohr.lithium.type.BuildScope;
-import com.s8.io.bohr.lithium.type.ResolveScope;
 import com.s8.io.bytes.base64.Base64Generator;
 
 
@@ -27,29 +18,10 @@ import com.s8.io.bytes.base64.Base64Generator;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class LiBranch {
+public class LiBranch implements LiGraphDeltaConsumer {
 
 
 
-	/**
-	 * 
-	 */
-	public final static int EXPOSURE_RANGE = 8;
-
-
-
-	public final ResolveScope resolveScope = new ResolveScope() {
-
-		@Override
-		public String resolveId(LiObject object) throws LiIOException {
-			if(object != null) {
-				return append(null, object).id;
-			}
-			else {
-				return null;
-			}
-		}
-	};
 
 
 	public final String address;
@@ -61,20 +33,7 @@ public class LiBranch {
 	long highestIndex;
 
 
-	/**
-	 * The interior mapping
-	 */
-	public final Map<String, LiVertex> vertices;
 
-
-	final LiVertex[] exposure;
-
-
-
-	/**
-	 * Stateful var
-	 */
-	long version;
 
 
 
@@ -88,13 +47,9 @@ public class LiBranch {
 
 	private final DebugModule debugModule;
 
-	private boolean hasUnpublishedChanges = false;
+	private final LiGraph graph;
 
-	private final Deque<LiVertex> unpublishedVertices = new LinkedList<LiVertex>();
-
-
-	private final Set<Integer> unpublishedSlotExposure = new HashSet<>();
-
+	private final ArrayList<LiGraphDelta> deltas;
 
 
 
@@ -111,37 +66,43 @@ public class LiBranch {
 
 		this.codebase = codebase;
 
-		// exposure
-		exposure = new LiVertex[EXPOSURE_RANGE];
 
-		vertices = new HashMap<String, LiVertex>();
-
-		debugModule = new DebugModule(this);
-
+		graph = new LiGraph(this);
+		debugModule = new DebugModule(graph);
 		idxGen = new Base64Generator(id);
+
+		deltas = new ArrayList<>();
 	}
 
 
 
-	public LiVertex getVertex(String id) {
-		return vertices.get(id);
+	/**
+	 * 
+	 * @return
+	 */
+	public LiGraph getGraph() {
+		return graph;
+	}
+
+	@Override
+	public void pushDelta(LiGraphDelta delta) throws LiIOException {
+
+		/* save delta */
+		this.deltas.add(delta);
+
+		/* operate delta immediatley */
+		delta.operate(graph);
 	}
 
 
-	public void removeVertex(String id) {
-		vertices.remove(id);
-	}
-
-
-	public void expose(int slot, LiObject object) throws LiIOException {
-		LiVertex vertex = resolveVertex(object);
-		exposure[slot] = vertex;
-		reportExpose(slot);
-	}
-
-
-	public LiObject retrieveObject(String index) {
-		return vertices.get(index).object;
+	/**
+	 * 
+	 * @param copy
+	 */
+	public List<LiGraphDelta> pullDeltas() {
+		List<LiGraphDelta> copy = new ArrayList<>();
+		deltas.forEach(delta -> copy.add(delta));
+		return copy;
 	}
 
 
@@ -154,62 +115,49 @@ public class LiBranch {
 	}
 
 
-	public BuildScope createBuildScope() {
-		return new BuildScope() {
-			@Override
-			public LiObject retrieveObject(String index) {
-				return vertices.get(index).object;
+
+
+
+
+	/**
+	 * 
+	 * @return
+	 */
+	public LiObject[] getCurrentExposure() {
+		LiVertex[] vertices = graph.exposure;
+		int n = vertices.length;
+		LiObject[] objects = new LiObject[n];
+		for(int i = 0; i<n; i++) {
+			LiVertex vertex = vertices[i];
+			if(vertex != null) {
+				objects[i] = vertex.object;
 			}
-		};
+		}
+		return objects;
 	}
-
-
-
-
-
+	
+	
+	/**
+	 * 
+	 * @param slot
+	 * @return
+	 */
+	public LiObject getExposed(int slot) {
+		LiVertex vertex = graph.exposure[slot];
+		return vertex != null ? vertex.object : null;
+	}
 	
 
-
-
-
-	public LiVertex resolveVertex(LiObject object) throws LiIOException {
-		return append(null, object);
+	
+	/**
+	 * 
+	 * @param slot
+	 * @param object
+	 * @throws LiIOException
+	 */
+	public void expose(int slot, LiObject object) throws LiIOException {
+		graph.expose(slot, object);
 	}
-
-
-
-	public LiVertex append(String id, LiObject object) throws LiIOException {
-
-		if(object == null) { throw new LiIOException("Cannot append null obejct"); }
-
-		/* retrieve object vertex */
-		LiVertex vertex = (LiVertex) object.S8_vertex;
-
-		if(vertex == null) {
-
-			/* if index is null, assigned a newly generated one */
-			boolean isCreating;
-			if(isCreating = (id == null)){
-				id = createNewIndex();
-			}
-
-			/* create vertex */
-			vertex = new LiVertex(this, id, object);
-
-			/* assign newly created vertex */
-			object.S8_vertex = vertex;
-
-			/* newly created vertex, so report activity */
-			if(isCreating) { reportCreate(vertex); }
-
-			/* register vertex */
-			vertices.put(id, vertex);
-		}
-
-		return vertex;
-
-	}
-
 
 
 
@@ -219,74 +167,11 @@ public class LiBranch {
 	 * @throws IOException
 	 */
 	public void print(Writer writer) throws IOException {
-		debugModule.print(resolveScope, writer);
-	}
-
-
-	public void reportExpose(int slot) {
-		unpublishedSlotExposure.add(slot);
-		hasUnpublishedChanges = true;
-	}
-
-
-	public void reportCreate(LiVertex vertex) {
-		unpublishedVertices.add(vertex);
-		hasUnpublishedChanges = true;
-	}
-
-
-	public void reportUpdate(LiVertex vertex) {
-		hasUnpublishedChanges = true;
-		unpublishedVertices.add(vertex);
+		debugModule.print(graph.resolveScope, writer);
 	}
 
 
 
-	public boolean hasUnpublishedChanges() {
-		return hasUnpublishedChanges;
-	}
-
-
-	/**
-	 * 
-	 * @param outflow
-	 * @throws IOException 
-	 * @throws S8Exception 
-	 * @throws S8BuildException 
-	 */
-	public LiBranchDelta compose() throws S8BuildException, S8Exception, IOException {
-
-		if(!hasUnpublishedChanges) {
-			// TODO
-		}
-
-		LiBranchDelta branchDelta = new LiBranchDelta(version+1);
-		version++;
-
-
-		LiVertex vertex;
-		while((vertex = unpublishedVertices.poll()) != null) {
-			vertex.publish(branchDelta.objectDeltas, resolveScope);
-		}
-
-
-		// expose if necessary
-		if(!unpublishedSlotExposure.isEmpty()) {
-			unpublishedSlotExposure.forEach(slot -> {
-				LiVertex exposedVertex = exposure[slot];
-				if(exposedVertex != null) {
-					branchDelta.appendObjectDelta(new ExposeLiObjectDelta(exposedVertex.id, slot));		
-				}
-			});
-		}
-
-
-
-		hasUnpublishedChanges = false;
-		
-		return branchDelta;
-
-	}
 
 
 

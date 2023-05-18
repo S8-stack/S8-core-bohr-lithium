@@ -39,7 +39,7 @@ public class LiVertex {
 
 
 
-	public final LiBranch branch;
+	public final LiGraph graph;
 
 
 
@@ -83,12 +83,12 @@ public class LiVertex {
 	 * @param object
 	 * @throws IOException 
 	 */
-	public LiVertex(LiBranch branch, String id, LiObject object) throws LiIOException {
+	public LiVertex(LiGraph graph, String id, LiObject object) throws LiIOException {
 		super();
-		this.branch = branch;
+		this.graph = graph;
 		this.id = id;
 
-		LiType type = branch.codebase.getType(object);
+		LiType type = graph.getCodebase().getType(object);
 		if(type == null) {
 			throw new LiIOException("Type "+object.getClass().getName()+" is unknown from this branch codebase.");
 		}
@@ -156,7 +156,7 @@ public class LiVertex {
 
 		// internal notification schema
 		if(!isUnpublished) {
-			branch.reportCreate(this);
+			graph.reportCreate(this);
 			isUnpublished = true;
 		}
 	}
@@ -219,8 +219,8 @@ public class LiVertex {
 
 
 
-	public LiBranch getBranch() {
-		return branch;
+	public LiGraph getBranch() {
+		return graph;
 	}
 
 

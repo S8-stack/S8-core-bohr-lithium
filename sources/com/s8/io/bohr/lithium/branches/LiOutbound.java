@@ -81,9 +81,9 @@ public class LiOutbound {
 	 * @param deltas
 	 * @throws IOException
 	 */
-	private void composeSequence(ByteOutflow outflow, LiBranchDelta[] deltas) throws IOException {
+	private void composeSequence(ByteOutflow outflow, LiGraphDelta[] deltas) throws IOException {
 		outflow.putUInt8(BOHR_Keywords.OPEN_SEQUENCE);
-		for(LiBranchDelta delta : deltas){
+		for(LiGraphDelta delta : deltas){
 			delta.serialize(this, outflow);
 		}
 		outflow.putUInt8(BOHR_Keywords.CLOSE_SEQUENCE);
@@ -96,7 +96,7 @@ public class LiOutbound {
 	 * @param outflow
 	 * @throws IOException
 	 */
-	public void pushFrame(ByteOutflow outflow, LiBranchDelta[] deltas) throws IOException {
+	public void pushFrame(ByteOutflow outflow, LiGraphDelta[] deltas) throws IOException {
 		outflow.putByteArray(BOHR_Keywords.FRAME_HEADER);
 		composeSequence(outflow, deltas);
 		outflow.putByteArray(BOHR_Keywords.FRAME_FOOTER);

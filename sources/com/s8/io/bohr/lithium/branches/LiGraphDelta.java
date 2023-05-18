@@ -22,7 +22,7 @@ import com.s8.io.bytes.alpha.ByteOutflow;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class LiBranchDelta {
+public class LiGraphDelta {
 
 
 
@@ -70,7 +70,7 @@ public class LiBranchDelta {
 	/**
 	 * 
 	 */
-	public LiBranchDelta(long version) {
+	public LiGraphDelta(long version) {
 		super();
 		this.targetVersion = version;
 	}
@@ -103,7 +103,7 @@ public class LiBranchDelta {
 	 * @param graph
 	 * @throws NdIOException
 	 */
-	public void operate(LiBranch branch) throws LiIOException {
+	public void operate(LiGraph branch) throws LiIOException {
 		/* check version */
 		if(targetVersion != (branch.version + 1)) { 
 			throw new LiIOException("Mismatch in versions");

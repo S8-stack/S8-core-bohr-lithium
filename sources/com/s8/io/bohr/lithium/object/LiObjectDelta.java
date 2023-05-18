@@ -2,7 +2,7 @@ package com.s8.io.bohr.lithium.object;
 
 import java.io.IOException;
 
-import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.type.BuildScope;
@@ -35,7 +35,7 @@ public abstract class LiObjectDelta {
 	 * @throws NdIOException 
 	 * @throws IOException 
 	 */
-	public abstract void operate(LiBranch branch, BuildScope scope) throws LiIOException;
+	public abstract void operate(LiGraph graph, BuildScope scope) throws LiIOException;
 
 	
 	/**

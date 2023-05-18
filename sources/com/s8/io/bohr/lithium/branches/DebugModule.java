@@ -18,11 +18,11 @@ import com.s8.io.bohr.lithium.type.ResolveScope;
  */
 public class DebugModule {
 
-	private final LiBranch branch;
+	private final LiGraph graph;
 	
-	public DebugModule(LiBranch branch) {
+	public DebugModule(LiGraph graph) {
 		super();
-		this.branch = branch;
+		this.graph = graph;
 	}
 	
 
@@ -37,7 +37,7 @@ public class DebugModule {
 		
 		writer.write("<shell:>\n");
 		
-		branch.vertices.forEach((index, vertex) -> {
+		graph.vertices.forEach((index, vertex) -> {
 			try {
 				LiType type = vertex.type;
 				LiObject object = vertex.getObject();
