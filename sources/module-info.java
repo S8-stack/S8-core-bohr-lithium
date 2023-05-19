@@ -17,6 +17,7 @@ module com.s8.io.bohr.lithium {
 	exports com.s8.io.bohr.lithium.properties;
 	exports com.s8.io.bohr.lithium.branches;
 	exports com.s8.io.bohr.lithium.type;
+	exports com.s8.io.bohr.lithium.exceptions;
 	
 
 	/* </lithium> */
