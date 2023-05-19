@@ -24,10 +24,6 @@ public class LiBranch implements LiGraphDeltaConsumer {
 
 
 
-
-
-	public final String address;
-
 	public final String id;
 
 	public final LiCodebase codebase;
@@ -61,9 +57,8 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	 * @param graph
 	 * @param deltas
 	 */
-	public LiBranch(String address, String id, LiCodebase codebase) {
+	public LiBranch(String id, LiCodebase codebase) {
 		super();
-		this.address = address;
 		this.id = id;
 
 		this.codebase = codebase;
@@ -131,9 +126,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 		LiObject[] objects = new LiObject[n];
 		for(int i = 0; i<n; i++) {
 			LiVertex vertex = vertices[i];
-			if(vertex != null) {
-				objects[i] = vertex.object;
-			}
+			objects[i] = (vertex != null) ? vertex.object : null; 
 		}
 		return objects;
 	}

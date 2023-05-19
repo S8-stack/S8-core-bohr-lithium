@@ -17,7 +17,7 @@ public class LiTest02 {
 		codebase.DEBUG_print();
 		
 		MyBuilding building = MyBuilding.create();
-		LiBranch branch = new LiBranch("com.toto.123.098", "master", codebase);
+		LiBranch branch = new LiBranch("master", codebase);
 		branch.expose(2, building);
 		
 		
@@ -27,7 +27,7 @@ public class LiTest02 {
 		branch.save();
 		List<LiGraphDelta> deltas = branch.pullDeltas();
 		
-		LiBranch branch2 = new LiBranch("com.toto.123.098", "master", codebase);
+		LiBranch branch2 = new LiBranch("master", codebase);
 		deltas.forEach(d -> {
 			try { branch2.pushDelta(d); }catch (LiIOException e) { e.printStackTrace(); }
 		});
