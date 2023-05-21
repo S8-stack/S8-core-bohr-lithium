@@ -130,7 +130,7 @@ public class S8SerializableLiField extends LiField {
 
 
 
-	private BohrSerializable.S8SerialPrototype<?> deserializer;
+	private BohrSerializable.BohrSerialPrototype<?> deserializer;
 
 
 	
@@ -239,11 +239,6 @@ public class S8SerializableLiField extends LiField {
 			throw new IOException("only array accepted");
 		}
 		
-		String signature = inflow.getStringUTF8();
-		if(signature != deserializer.signature) {
-			throw new IOException("Unsupported SERIAL: "+printType());
-		}
-		
 		// in fine, create parser
 		return new Parser();
 	}
@@ -303,8 +298,6 @@ public class S8SerializableLiField extends LiField {
 		@Override
 		public void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.SERIAL);
-			String signature = deserializer.signature;
-			outflow.putStringUTF8(signature);
 		}
 
 		@Override
