@@ -39,12 +39,12 @@ public abstract class LiFieldProperties {
 
 
 
-	private boolean isFlowDefined = false;
+	private boolean isExportFormatDefined = false;
 
 	/**
 	 * 
 	 */
-	private String flow;
+	private String exportFormat;
 
 
 	private boolean isMaskDefined = false;
@@ -123,13 +123,13 @@ public abstract class LiFieldProperties {
 
 
 	public String getFlow() {
-		return flow;
+		return exportFormat;
 	}
 
 
-	public void setFlow(String flow) {
-		this.flow = flow;
-		this.isFlowDefined = true;
+	public void setExportFormat(String flow) {
+		this.exportFormat = flow;
+		this.isExportFormatDefined = true;
 	}
 
 
@@ -192,11 +192,11 @@ public abstract class LiFieldProperties {
 		}
 
 		// flow
-		if(!isFlowDefined && right.isFlowDefined) {
-			setFlow(right.name);
+		if(!isExportFormatDefined && right.isExportFormatDefined) {
+			setExportFormat(right.name);
 		}
-		else if(isFlowDefined && right.isFlowDefined && !flow.equals(right.flow)) {
-			throw new LiBuildException("<flow> discrepancy: "+flow+" <-> "+right.flow);
+		else if(isExportFormatDefined && right.isExportFormatDefined && !exportFormat.equals(right.exportFormat)) {
+			throw new LiBuildException("<flow> discrepancy: "+exportFormat+" <-> "+right.exportFormat);
 		}
 
 		// mask
@@ -228,9 +228,7 @@ public abstract class LiFieldProperties {
 	 */
 	public void setFieldAnnotation(S8Field annotation) {
 		setName(annotation.name());
-		setFlow(annotation.flow());
-		setMask(annotation.mask());
-		setFlags(annotation.props());
+		setExportFormat(annotation.export());
 	}
 
 
@@ -242,9 +240,7 @@ public abstract class LiFieldProperties {
 	 */
 	public void setGetterAnnotation(S8Getter annotation) {
 		setName(annotation.name());
-		setFlow(annotation.flow());
-		setMask(annotation.mask());
-		setFlags(annotation.flags());
+		setExportFormat(annotation.export());
 	}
 
 	/**

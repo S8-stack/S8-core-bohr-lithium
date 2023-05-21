@@ -1,6 +1,6 @@
 package com.s8.io.bohr.lithium.fields.objects;
 
-import com.s8.io.bohr.atom.BohrSerializable;
+import com.s8.io.bohr.atom.serial.BohrSerializable;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;

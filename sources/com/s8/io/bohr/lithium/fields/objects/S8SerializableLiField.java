@@ -8,11 +8,12 @@ import java.util.Queue;
 
 import com.s8.io.bohr.atom.BOHR_Properties;
 import com.s8.io.bohr.atom.BOHR_Types;
-import com.s8.io.bohr.atom.BohrSerializable;
 import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8Getter;
 import com.s8.io.bohr.atom.annotations.S8Setter;
+import com.s8.io.bohr.atom.serial.BohrSerialUtilities;
+import com.s8.io.bohr.atom.serial.BohrSerializable;
 import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
@@ -144,7 +145,7 @@ public class S8SerializableLiField extends LiField {
 		super(ordinal, properties, handler);
 		Class<?> baseType = properties.getBaseType();
 		try {
-			deserializer = BohrSerializable.getDeserializer(baseType);
+			deserializer = BohrSerialUtilities.getDeserializer(baseType);
 		} 
 		catch (S8Exception e) {
 			e.printStackTrace();

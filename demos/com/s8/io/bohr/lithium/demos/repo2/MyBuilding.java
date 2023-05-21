@@ -20,15 +20,14 @@ import com.s8.io.bohr.lithium.object.LiObject;
 @S8ObjectType(name = "my-building")
 public class MyBuilding extends LiObject {
 
-	public final static long HAS_CHANGED = 0x02;
 	
-	public @S8Field(name = "n-floors", mask = HAS_CHANGED) int nFloors;
+	public @S8Field(name = "n-floors") int nFloors;
 	
-	public @S8Field(name = "lower-ground-floor", mask = HAS_CHANGED) MyFloor lowerGroundFloor;
+	public @S8Field(name = "lower-ground-floor") MyFloor lowerGroundFloor;
 	
-	public @S8Field(name = "ground-floor", mask = HAS_CHANGED) MyFloor groundFloor;
+	public @S8Field(name = "ground-floor") MyFloor groundFloor;
 	
-	public @S8Field(name = "upper-floors", mask = HAS_CHANGED) List<MyFloor> upperGroundFloors;
+	public @S8Field(name = "upper-floors") List<MyFloor> upperGroundFloors;
 	
 	
 	public MyBuilding() {
