@@ -153,6 +153,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	public void expose(int slot, LiObject object) throws LiIOException {
 		graph.expose(slot, object);
 	}
+	
 
 
 

@@ -18,14 +18,14 @@ import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
 
 public class LiGraph {
-	
+
 
 	/**
 	 * 
 	 */
 	public final static int EXPOSURE_RANGE = 8;
-	
-	
+
+
 	public final LiBranch branch;
 
 
@@ -36,8 +36,8 @@ public class LiGraph {
 
 
 	final LiVertex[] exposure;
-	
-	
+
+
 	private boolean hasUnpublishedChanges = false;
 
 	private final Deque<LiVertex> unpublishedVertices = new LinkedList<LiVertex>();
@@ -52,15 +52,15 @@ public class LiGraph {
 	 * Stateful var
 	 */
 	long version;
-	
-	
-	
+
+
+
 	/**
 	 * 
 	 * @param branch
 	 */
 	public LiGraph(LiBranch branch) {
-		
+
 		super();
 		this.branch = branch;
 
@@ -70,7 +70,7 @@ public class LiGraph {
 		vertices = new HashMap<String, LiVertex>();
 	}
 
-	
+
 	/**
 	 * 
 	 * @return
@@ -78,7 +78,7 @@ public class LiGraph {
 	public LiCodebase getCodebase() {
 		return branch.codebase;
 	}
-	
+
 
 	public LiVertex getVertex(String id) {
 		return vertices.get(id);
@@ -91,8 +91,13 @@ public class LiGraph {
 
 
 	public void expose(int slot, LiObject object) throws LiIOException {
-		LiVertex vertex = resolveVertex(object);
-		exposure[slot] = vertex;
+		if(object != null) {
+			LiVertex vertex = resolveVertex(object);
+			exposure[slot] = vertex;	
+		}
+		else {
+			exposure[slot] = null;
+		}
 		reportExpose(slot);
 	}
 
@@ -100,8 +105,8 @@ public class LiGraph {
 	public LiObject retrieveObject(String index) {
 		return vertices.get(index).object;
 	}
-	
-	
+
+
 
 
 	public BuildScope createBuildScope() {
@@ -132,6 +137,7 @@ public class LiGraph {
 
 
 	public LiVertex resolveVertex(LiObject object) throws LiIOException {
+		if(object == null) throw new LiIOException("Cannot resolve null object vertex");
 		return append(null, object);
 	}
 
@@ -169,8 +175,8 @@ public class LiGraph {
 
 	}
 
-	
-	
+
+
 
 	public void reportExpose(int slot) {
 		unpublishedSlotExposure.add(slot);
@@ -195,7 +201,7 @@ public class LiGraph {
 		return hasUnpublishedChanges;
 	}
 
-	
+
 	/**
 	 * 
 	 * @param outflow
@@ -222,17 +228,19 @@ public class LiGraph {
 		// expose if necessary
 		if(!unpublishedSlotExposure.isEmpty()) {
 			unpublishedSlotExposure.forEach(slot -> {
+				
 				LiVertex exposedVertex = exposure[slot];
-				if(exposedVertex != null) {
-					branchDelta.appendObjectDelta(new ExposeLiObjectDelta(exposedVertex.id, slot));		
-				}
+
+				branchDelta.appendObjectDelta(
+						new ExposeLiObjectDelta(exposedVertex != null ? exposedVertex.id : null, slot));		
+
 			});
 		}
 
 
 
 		hasUnpublishedChanges = false;
-		
+
 		return branchDelta;
 
 	}
