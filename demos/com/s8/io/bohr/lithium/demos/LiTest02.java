@@ -24,7 +24,7 @@ public class LiTest02 {
 		building.variate();
 		System.out.println("val 0:"+building.upperGroundFloors.get(4).y0);
 		
-		branch.save();
+		branch.commit();
 		List<LiGraphDelta> deltas = branch.pullDeltas();
 		
 		LiBranch branch2 = new LiBranch("master", codebase);

@@ -161,13 +161,13 @@ public class LongLiField extends PrimitiveLiField {
 	}
 	private class UInt32_NdFieldInflow extends LongNdFieldInflow {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
-			return (long) inflow.getUInt8();
+			return (long) inflow.getUInt32();
 		}
 	}
 
 	private class UInt64_NdFieldInflow extends LongNdFieldInflow {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
-			return (long) inflow.getUInt16();
+			return (long) inflow.getUInt64();
 		}
 	}
 
@@ -184,13 +184,13 @@ public class LongLiField extends PrimitiveLiField {
 	}
 	private class Int32_NdFieldInflow extends LongNdFieldInflow {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
-			return (long) inflow.getInt8();
+			return (long) inflow.getInt32();
 		}
 	}
 
 	private class Int64_NdFieldInflow extends LongNdFieldInflow {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
-			return (long) inflow.getInt16();
+			return (long) inflow.getInt64();
 		}
 	}
 

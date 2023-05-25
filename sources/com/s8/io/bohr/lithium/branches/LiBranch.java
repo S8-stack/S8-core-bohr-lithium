@@ -173,9 +173,10 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	 * @throws S8Exception
 	 * @throws IOException
 	 */
-	public void save() throws S8BuildException, S8Exception, IOException {
+	public void commit() throws S8BuildException, S8Exception, IOException {
 		deltas.add(graph.produceDiff());
 	}
+
 
 
 }

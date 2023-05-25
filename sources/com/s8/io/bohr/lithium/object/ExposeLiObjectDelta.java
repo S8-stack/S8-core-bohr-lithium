@@ -20,7 +20,7 @@ import com.s8.io.bytes.alpha.ByteOutflow;
  * 
  */
 public class ExposeLiObjectDelta extends LiObjectDelta {
-	
+
 	public final int slot;
 
 
@@ -45,13 +45,15 @@ public class ExposeLiObjectDelta extends LiObjectDelta {
 
 	@Override
 	public void operate(LiGraph graph, BuildScope scope) throws LiIOException {
-		
+
 		/* retrieve vertex */
 		LiVertex vertex = graph.getVertex(id);
-		
-		graph.expose(slot, vertex.object);
+
+		/* graph expose  */
+		graph.expose(slot, vertex != null ? vertex.object : null);	
+
 	}
-	
+
 
 }
 

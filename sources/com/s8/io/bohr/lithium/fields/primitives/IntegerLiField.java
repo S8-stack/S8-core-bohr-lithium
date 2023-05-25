@@ -154,7 +154,7 @@ public class IntegerLiField extends PrimitiveLiField {
 
 	private class UInt32_Inflow extends Inflow {
 		public @Override int deserialize(ByteInflow inflow) throws IOException {
-			return inflow.getUInt8();
+			return inflow.getUInt32();
 		}
 	}
 
