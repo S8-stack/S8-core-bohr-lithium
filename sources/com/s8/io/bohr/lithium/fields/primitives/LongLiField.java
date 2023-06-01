@@ -190,7 +190,7 @@ public class LongLiField extends PrimitiveLiField {
 
 	private class Int64_NdFieldInflow extends LongNdFieldInflow {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
-			return (long) inflow.getInt64();
+			return inflow.getInt64();
 		}
 	}
 
@@ -313,7 +313,7 @@ public class LongLiField extends PrimitiveLiField {
 			outflow.putUInt8(BOHR_Types.INT64);
 		}
 		public @Override void serialize(ByteOutflow outflow, long value) throws IOException {
-			outflow.putInt64((int) value);
+			outflow.putInt64(value);
 		}
 	}
 
