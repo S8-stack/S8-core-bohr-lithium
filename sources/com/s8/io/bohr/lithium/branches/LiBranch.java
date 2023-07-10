@@ -156,6 +156,18 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	
 
 
+	/**
+	 * 
+	 * @param objects
+	 * @throws LiIOException
+	 */
+	public void expose(LiObject[] objects) throws LiIOException {
+		int range = objects.length;
+		for(int slot = 0; slot<range; slot++) { graph.expose(slot, objects[slot]); }
+
+	}
+	
+
 
 	/**
 	 * 

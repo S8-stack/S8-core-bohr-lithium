@@ -160,6 +160,17 @@ public class LiVertex {
 			isUnpublished = true;
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * @param fieldNames
+	 * @throws LiIOException
+	 */
+	public void reportChanges(String... fieldNames) throws LiIOException {
+		int n = fieldNames.length;
+		for(int i = 0; i < n; i++) { reportChange(fieldNames[i]); }
+	}
 
 
 
