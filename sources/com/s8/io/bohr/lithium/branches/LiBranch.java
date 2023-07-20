@@ -10,7 +10,7 @@ import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.LiObject;
-import com.s8.io.bytes.base64.Base64Generator;
+import com.s8.io.bytes.base64.Base64Composer;
 
 
 /**
@@ -41,7 +41,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	long timestamp;
 
 
-	private final Base64Generator idxGen;
+	private final Base64Composer idxGen;
 
 	private final DebugModule debugModule;
 
@@ -66,7 +66,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 
 		graph = new LiGraph(this);
 		debugModule = new DebugModule(graph);
-		idxGen = new Base64Generator(id);
+		idxGen = new Base64Composer(id);
 
 		deltas = new ArrayList<>();
 	}
