@@ -3,8 +3,8 @@ package com.s8.io.bohr.lithium.type;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.object.LiObject;
 
 
 /**
@@ -41,7 +41,7 @@ public class DebugModule {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void print(LiObject object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(SpaceS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		
 		// advertise class
 		writer.write('(');

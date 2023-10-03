@@ -5,20 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.S8BuildException;
-import com.s8.io.bohr.atom.S8Exception;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.objects.space.SpaceS8Vertex;
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.object.CreateLiObjectDelta;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.object.LiObjectDelta;
 import com.s8.io.bohr.lithium.object.UpdateLiObjectDelta;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.ResolveScope;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -35,7 +35,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  *
  */
-public class LiVertex {
+public class LiVertex implements SpaceS8Vertex {
 
 
 
@@ -69,7 +69,7 @@ public class LiVertex {
 	private boolean isCreateUnpublished = false;
 
 
-	public final LiObject object;
+	public final SpaceS8Object object;
 
 	/**
 	 * 
@@ -83,14 +83,14 @@ public class LiVertex {
 	 * @param object
 	 * @throws IOException 
 	 */
-	public LiVertex(LiGraph graph, String id, LiObject object) throws LiIOException {
+	public LiVertex(LiGraph graph, String id, SpaceS8Object object) throws S8IOException {
 		super();
 		this.graph = graph;
 		this.id = id;
 
 		LiType type = graph.getCodebase().getType(object);
 		if(type == null) {
-			throw new LiIOException("Type "+object.getClass().getName()+" is unknown from this branch codebase.");
+			throw new S8IOException("Type "+object.getClass().getName()+" is unknown from this branch codebase.");
 		}
 		this.type = type;
 
@@ -108,7 +108,7 @@ public class LiVertex {
 
 
 
-	public LiObject getObject() {
+	public SpaceS8Object getObject() {
 		return object;
 	}
 
@@ -142,11 +142,11 @@ public class LiVertex {
 
 
 
-	public void reportChange(String fieldName) throws LiIOException {
+	public void reportChange(String fieldName) throws S8IOException {
 
 		LiField field = type.getFieldByName(fieldName);
 		if(field == null) {
-			throw new LiIOException("Field "+fieldName+" is unknown from this object type");
+			throw new S8IOException("Field "+fieldName+" is unknown from this object type");
 		}
 
 
@@ -165,9 +165,9 @@ public class LiVertex {
 	/**
 	 * 
 	 * @param fieldNames
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public void reportChanges(String... fieldNames) throws LiIOException {
+	public void reportChanges(String... fieldNames) throws S8IOException {
 		int n = fieldNames.length;
 		for(int i = 0; i < n; i++) { reportChange(fieldNames[i]); }
 	}
@@ -181,9 +181,9 @@ public class LiVertex {
 	 * @param object
 	 * @throws BkException
 	 * @throws IOException 
-	 * @throws S8Exception 
+	 * @throws S8IOException 
 	 */
-	public void publish( List<LiObjectDelta> objectDeltas, ResolveScope scope) throws S8BuildException, IOException, S8Exception {
+	public void publish( List<LiObjectDelta> objectDeltas, ResolveScope scope) throws S8BuildException, IOException, S8IOException {
 
 		if(isUnpublished) {
 

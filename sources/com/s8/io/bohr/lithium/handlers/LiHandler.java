@@ -3,8 +3,8 @@ package com.s8.io.bohr.lithium.handlers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
 
 
 /**
@@ -43,7 +43,7 @@ public interface LiHandler {
 	 * @param field
 	 * @throws LithTypeBuildException
 	 */
-	public void attachField(Field field) throws LiBuildException;
+	public void attachField(Field field) throws S8BuildException;
 	
 	
 	/**
@@ -51,7 +51,7 @@ public interface LiHandler {
 	 * @param method
 	 * @throws LithTypeBuildException
 	 */
-	public void attachGetMethod(Method method) throws LiBuildException;
+	public void attachGetMethod(Method method) throws S8BuildException;
 
 	
 	/**
@@ -59,7 +59,7 @@ public interface LiHandler {
 	 * @param method
 	 * @throws LithTypeBuildException
 	 */
-	public void attachSetMethod(Method method) throws LiBuildException;
+	public void attachSetMethod(Method method) throws S8BuildException;
 
 
 	/**
@@ -69,7 +69,7 @@ public interface LiHandler {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public Object get(Object object) throws LiIOException;
+	public Object get(Object object) throws S8IOException;
 
 
 	/**
@@ -79,55 +79,55 @@ public interface LiHandler {
 	 * @param value
 	 * @throws LthSerialException
 	 */
-	public void set(Object object, Object value) throws LiIOException;
+	public void set(Object object, Object value) throws S8IOException;
 
 
-	public byte getByte(Object object) throws LiIOException;
+	public byte getByte(Object object) throws S8IOException;
 	
 
-	public void setByte(Object object, byte value) throws LiIOException;
+	public void setByte(Object object, byte value) throws S8IOException;
 	
 
-	public boolean getBoolean(Object object) throws LiIOException;
+	public boolean getBoolean(Object object) throws S8IOException;
 
 
-	public void setBoolean(Object object, boolean value) throws LiIOException;
+	public void setBoolean(Object object, boolean value) throws S8IOException;
 
 
-	public double getDouble(Object object) throws LiIOException;
+	public double getDouble(Object object) throws S8IOException;
 	
 	
-	public void setDouble(Object object, double value) throws LiIOException;
+	public void setDouble(Object object, double value) throws S8IOException;
 	
 	
-	public void setFloat(Object object, float value) throws LiIOException;
+	public void setFloat(Object object, float value) throws S8IOException;
 
 
-	public float getFloat(Object object) throws LiIOException;
+	public float getFloat(Object object) throws S8IOException;
 
 
-	public void setInteger(Object object, int value) throws LiIOException;
+	public void setInteger(Object object, int value) throws S8IOException;
 
 
-	public int getInteger(Object object) throws LiIOException;
+	public int getInteger(Object object) throws S8IOException;
 
 
-	public void setLong(Object object, long value) throws LiIOException;
+	public void setLong(Object object, long value) throws S8IOException;
 
 
-	public long getLong(Object object) throws LiIOException;
+	public long getLong(Object object) throws S8IOException;
 
 
-	public void setShort(Object object, short value) throws LiIOException;
+	public void setShort(Object object, short value) throws S8IOException;
 
 
-	public short getShort(Object object) throws LiIOException;
+	public short getShort(Object object) throws S8IOException;
 
 
-	public void setString(Object object, String value) throws LiIOException;
+	public void setString(Object object, String value) throws S8IOException;
 
 
-	public String getString(Object object) throws LiIOException;
+	public String getString(Object object) throws S8IOException;
 
 
 

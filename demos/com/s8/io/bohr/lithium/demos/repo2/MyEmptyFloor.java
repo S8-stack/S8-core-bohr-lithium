@@ -1,7 +1,7 @@
 package com.s8.io.bohr.lithium.demos.repo2;
 
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8ObjectType;
 
 
 
@@ -27,7 +27,7 @@ public class MyEmptyFloor extends MyFloor {
 	}
 
 	@Override
-	protected void init() throws LiIOException {
+	protected void init() throws S8IOException {
 		baseInit();
 	}
 

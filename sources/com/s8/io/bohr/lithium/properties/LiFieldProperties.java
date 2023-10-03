@@ -1,10 +1,9 @@
 package com.s8.io.bohr.lithium.properties;
 
-import com.s8.io.bohr.atom.S8BuildException;
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8Setter;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8Setter;
 import com.s8.io.bohr.lithium.fields.EmbeddedTypeNature;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 
@@ -164,22 +163,22 @@ public abstract class LiFieldProperties {
 	 * @param right
 	 * @throws S8BuildException 
 	 */
-	public void merge(LiFieldProperties right) throws LiBuildException {
+	public void merge(LiFieldProperties right) throws S8BuildException {
 		
 		if(mode != right.mode) {
-			throw new LiBuildException("Cannot mix FIELD and GETTER_SETTER_PARI approach");
+			throw new S8BuildException("Cannot mix FIELD and GETTER_SETTER_PARI approach");
 		}
 		
 		if(!getBaseType().equals(right.getBaseType())) {
-			throw new LiBuildException("Base type discrepancy: "+getBaseType()+" <-> "+right.getBaseType());
+			throw new S8BuildException("Base type discrepancy: "+getBaseType()+" <-> "+right.getBaseType());
 		}
 		
 		if(!getParameterType1().equals(right.getParameterType1())) {
-			throw new LiBuildException("<T1> type discrepancy: "+getParameterType1()+" <-> "+right.getParameterType1());
+			throw new S8BuildException("<T1> type discrepancy: "+getParameterType1()+" <-> "+right.getParameterType1());
 		}
 		
 		if(!getParameterType2().equals(right.getParameterType2())) {
-			throw new LiBuildException("<T2> type discrepancy: "+getParameterType2()+" <-> "+right.getParameterType2());
+			throw new S8BuildException("<T2> type discrepancy: "+getParameterType2()+" <-> "+right.getParameterType2());
 		}
 	
 
@@ -188,7 +187,7 @@ public abstract class LiFieldProperties {
 			setName(right.name);
 		}
 		else if(isNameDefined && right.isNameDefined && !name.equals(right.name)) {
-			throw new LiBuildException("<name> discrepancy: "+name+" <-> "+right.name);
+			throw new S8BuildException("<name> discrepancy: "+name+" <-> "+right.name);
 		}
 
 		// flow
@@ -196,7 +195,7 @@ public abstract class LiFieldProperties {
 			setExportFormat(right.name);
 		}
 		else if(isExportFormatDefined && right.isExportFormatDefined && !exportFormat.equals(right.exportFormat)) {
-			throw new LiBuildException("<flow> discrepancy: "+exportFormat+" <-> "+right.exportFormat);
+			throw new S8BuildException("<flow> discrepancy: "+exportFormat+" <-> "+right.exportFormat);
 		}
 
 		// mask
@@ -204,7 +203,7 @@ public abstract class LiFieldProperties {
 			setMask(right.mask);
 		}
 		else if(isMaskDefined && right.isMaskDefined && (mask != right.mask)) {
-			throw new LiBuildException("<mask> discrepancy: "+mask+" <-> "+right.mask);
+			throw new S8BuildException("<mask> discrepancy: "+mask+" <-> "+right.mask);
 		}
 
 		// flags
@@ -212,7 +211,7 @@ public abstract class LiFieldProperties {
 			setFlags(right.flags);
 		}
 		else if(isFlagsDefined && right.isFlagsDefined && (flags != right.flags)) {
-			throw new LiBuildException("<flags> discrepancy: "+flags+" <-> "+right.flags);
+			throw new S8BuildException("<flags> discrepancy: "+flags+" <-> "+right.flags);
 		}
 	}
 
@@ -224,7 +223,7 @@ public abstract class LiFieldProperties {
 	 * 
 	 * @param annotation
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
 	public void setFieldAnnotation(S8Field annotation) {
 		setName(annotation.name());
@@ -236,7 +235,7 @@ public abstract class LiFieldProperties {
 	 * 
 	 * @param annotation
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
 	public void setGetterAnnotation(S8Getter annotation) {
 		setName(annotation.name());
@@ -247,7 +246,7 @@ public abstract class LiFieldProperties {
 	 * 
 	 * @param annotation
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
 	public void setSetterAnnotation(S8Setter annotation) {
 		setName(annotation.name());

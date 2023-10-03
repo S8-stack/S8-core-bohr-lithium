@@ -3,8 +3,8 @@ package com.s8.io.bohr.lithium.codebase;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.objects.annotations.S8ObjectType;
 import com.s8.io.bohr.lithium.fields.LiFieldFactory;
 import com.s8.io.bohr.lithium.type.LiTypeBuilder;
 
@@ -73,9 +73,9 @@ public class LiCodebaseBuilder {
 	
 
 
-	public void pushObjectTypes(Class<?>... types) throws LiBuildException {
+	public void pushObjectTypes(Class<?>... types) throws S8BuildException {
 		if(isFinished) {
-			throw new LiBuildException("codebase construction process is now terminated");
+			throw new S8BuildException("codebase construction process is now terminated");
 		}
 		
 		for(Class<?> type : types) {
@@ -91,9 +91,9 @@ public class LiCodebaseBuilder {
 	 * @throws LithTypeBuildException
 	 * @throws LthSerialException 
 	 */
-	public void pushObjectType(Class<?> type) throws LiBuildException {
+	public void pushObjectType(Class<?> type) throws S8BuildException {
 		if(isFinished) {
-			throw new LiBuildException("codebase construction process is now terminated");
+			throw new S8BuildException("codebase construction process is now terminated");
 		}
 		
 		// must not have already been added
@@ -121,7 +121,7 @@ public class LiCodebaseBuilder {
 	 * @throws LithTypeBuildException
 	 * @throws BohrTypeBuildingException
 	 */
-	private void buildBuffered() throws LiBuildException {
+	private void buildBuffered() throws S8BuildException {
 
 		isBuildingInProgress = true;
 
@@ -148,9 +148,9 @@ public class LiCodebaseBuilder {
 	}
 	
 	
-	public LiCodebase build() throws LiBuildException {
+	public LiCodebase build() throws S8BuildException {
 		if(isFinished) {
-			throw new LiBuildException("codebase construction process is already terminated");
+			throw new S8BuildException("codebase construction process is already terminated");
 		}
 		codebase.nTypes = codebase.typesByRuntimeName.size();
 		isFinished = true;

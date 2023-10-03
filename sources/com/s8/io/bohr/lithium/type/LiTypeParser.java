@@ -1,17 +1,17 @@
 package com.s8.io.bohr.lithium.type;
 
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_NODE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DECLARE_FIELD;
-import static com.s8.io.bohr.atom.BOHR_Keywords.SET_VALUE;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.DECLARE_FIELD;
+import static com.s8.api.bohr.BOHR_Keywords.SET_VALUE;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
-import com.s8.io.bytes.alpha.ByteInflow;
 
 /**
  * 
@@ -121,7 +121,7 @@ public class LiTypeParser {
 				/* retrieve inflow field */
 				LiField field = type.getFieldByName(name);
 				if(field == null) {
-					throw new LiIOException("Failed to find field for name = "+name, type.getBaseType());
+					throw new S8IOException("Failed to find field for name = "+name, type.getBaseType());
 				}
 
 				/* retrieve inflow */

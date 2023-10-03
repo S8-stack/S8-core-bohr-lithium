@@ -1,9 +1,9 @@
 package com.s8.io.bohr.lithium.demos.repo2;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.space.SpaceS8Object;
 
 
 
@@ -21,7 +21,7 @@ import com.s8.io.bohr.lithium.object.LiObject;
 		MyCommercialBoxedWorkseat.class,
 		MyCommercialMeetingRoom.class
 })
-public abstract class MyCommercialFloorElement extends LiObject {
+public abstract class MyCommercialFloorElement extends SpaceS8Object {
 	
 
 
@@ -49,7 +49,7 @@ public abstract class MyCommercialFloorElement extends LiObject {
 	}
 	
 
-	public void baseInit() throws LiIOException {
+	public void baseInit() throws S8IOException {
 		x0 = Math.random()*100;
 		x1 = x0 + Math.random()*100;
 		y0 = Math.random()*100;
@@ -62,10 +62,10 @@ public abstract class MyCommercialFloorElement extends LiObject {
 	}
 	
 
-	public abstract void init() throws LiIOException;
+	public abstract void init() throws S8IOException;
 	
 	
-	public static MyCommercialFloorElement create() throws LiIOException {
+	public static MyCommercialFloorElement create() throws S8IOException {
 		MyCommercialFloorElement element = null;
 		if(Math.random()<0.3){
 			element = MyCommercialMeetingRoom.create();
@@ -77,7 +77,7 @@ public abstract class MyCommercialFloorElement extends LiObject {
 	}
 
 
-	public abstract void variate() throws LiIOException;
+	public abstract void variate() throws S8IOException;
 	
 	
 }

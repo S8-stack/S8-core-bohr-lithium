@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
+import com.s8.api.exceptions.S8BuildException;
 import com.s8.io.bohr.lithium.fields.arrays.BooleanArrayLiField;
 import com.s8.io.bohr.lithium.fields.arrays.DoubleArrayLiField;
 import com.s8.io.bohr.lithium.fields.arrays.FloatArrayLiField;
@@ -114,7 +114,7 @@ public class LiFieldFactory {
 	 * @return
 	 * @throws LithTypeBuildException
 	 */
-	public LiFieldBuilder captureField(Field field) throws LiBuildException {
+	public LiFieldBuilder captureField(Field field) throws S8BuildException {
 
 		// build key
 		Class<?> type = field.getType();
@@ -139,7 +139,7 @@ public class LiFieldFactory {
 		//DEBUG_analyze(field);
 
 		// no prototypes has been able to capture the field
-		throw new LiBuildException("Failed to capture the field ", field);
+		throw new S8BuildException("Failed to capture the field ", field);
 	}
 
 
@@ -151,7 +151,7 @@ public class LiFieldFactory {
 	 * @return
 	 * @throws LithTypeBuildException
 	 */
-	public LiFieldBuilder captureGetter(Method method) throws LiBuildException {
+	public LiFieldBuilder captureGetter(Method method) throws S8BuildException {
 
 		// build key
 		Class<?> type = method.getReturnType();
@@ -173,7 +173,7 @@ public class LiFieldFactory {
 			}
 		}
 		// no prototypes has been able to capture the field
-		throw new LiBuildException("Failed to capture the getter", method);
+		throw new S8BuildException("Failed to capture the getter", method);
 	}
 
 
@@ -183,7 +183,7 @@ public class LiFieldFactory {
 	 * @return
 	 * @throws LithTypeBuildException
 	 */
-	public LiFieldBuilder captureSetter(Method method) throws LiBuildException {
+	public LiFieldBuilder captureSetter(Method method) throws S8BuildException {
 
 		// build key
 		Class<?> type = method.getParameterTypes()[0];
@@ -204,7 +204,7 @@ public class LiFieldFactory {
 			}
 		}
 		// no prototypes has been able to capture the field
-		throw new LiBuildException("Failed to capture the setter", method);
+		throw new S8BuildException("Failed to capture the setter", method);
 	}
 	
 	

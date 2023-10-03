@@ -2,11 +2,11 @@ package com.s8.io.bohr.lithium.demos;
 
 import java.util.List;
 
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.branches.LiGraphDelta;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.demos.repo2.MyBuilding;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 
 public class LiTest02 {
 
@@ -29,7 +29,7 @@ public class LiTest02 {
 		
 		LiBranch branch2 = new LiBranch("master", codebase);
 		deltas.forEach(d -> {
-			try { branch2.pushDelta(d); }catch (LiIOException e) { e.printStackTrace(); }
+			try { branch2.pushDelta(d); }catch (S8IOException e) { e.printStackTrace(); }
 		});
 		
 		MyBuilding b2 = (MyBuilding) branch2.getExposed(2);

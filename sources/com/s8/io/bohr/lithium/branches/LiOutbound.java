@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.LiTypeComposer;
-import com.s8.io.bytes.alpha.ByteOutflow;
 
 /**
  * 
@@ -44,9 +44,9 @@ public class LiOutbound {
 	 * 
 	 * @param type
 	 * @return
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public LiTypeComposer getComposer(Class<?> type) throws LiIOException {
+	public LiTypeComposer getComposer(Class<?> type) throws S8IOException {
 		String runtimeName = type.getName();
 		return getComposer(runtimeName);
 	}
@@ -55,22 +55,22 @@ public class LiOutbound {
 	 * 
 	 * @param type
 	 * @return
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public LiTypeComposer getComposer(String runtimeTypeName) throws LiIOException {
+	public LiTypeComposer getComposer(String runtimeTypeName) throws S8IOException {
 		LiTypeComposer composer = composers.computeIfAbsent(runtimeTypeName, name -> {
 			LiType nType = codebase.getTypeByRuntimeName(name);
 			try {
 				return new LiTypeComposer(nType, ++typeCode);
 			} 
-			catch (LiBuildException e) {
+			catch (S8BuildException e) {
 				e.printStackTrace();
 				return null;
 			}
 		});
 		if(composer != null) { return composer; }
 		else {
-			throw new LiIOException("failed to build composer");
+			throw new S8IOException("failed to build composer");
 		}
 	}
 

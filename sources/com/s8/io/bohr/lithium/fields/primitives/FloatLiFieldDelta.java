@@ -1,9 +1,9 @@
 package com.s8.io.bohr.lithium.fields.primitives;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 
 /**
@@ -29,7 +29,7 @@ public class FloatLiFieldDelta extends LiFieldDelta {
 	public @Override LiField getField() { return field; }
 
 	@Override
-	public void operate(LiObject object, BuildScope scope) throws LiIOException {
+	public void operate(SpaceS8Object object, BuildScope scope) throws S8IOException {
 		field.handler.setFloat(object, value);
 	}
 

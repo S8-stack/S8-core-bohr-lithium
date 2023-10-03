@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.atom.annotations.S8Setter;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.annotations.S8Setter;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.codebase.LiCodebaseBuilder;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 
 /**
@@ -109,7 +109,7 @@ public class LiTypeBuilder {
 	 * @throws BkException
 	 * @throws Exception 
 	 */
-	public boolean process(LiCodebaseBuilder codebaseBuilder) throws LiBuildException {
+	public boolean process(LiCodebaseBuilder codebaseBuilder) throws S8BuildException {
 
 		// retrieve typeAnnotation once and for all
 		typeAnnotation = baseType.getAnnotation(S8ObjectType.class);
@@ -147,7 +147,7 @@ public class LiTypeBuilder {
 
 		// is static ?
 		if(!baseType.isMemberClass() || (baseType.isMemberClass() && Modifier.isStatic(mods))) {
-			if(LiObject.class.isAssignableFrom(baseType)) {
+			if(SpaceS8Object.class.isAssignableFrom(baseType)) {
 				isBuildable = true;
 			}
 			else if(isVerbose) {
@@ -166,19 +166,19 @@ public class LiTypeBuilder {
 	 * <p>Reslve name by checking direct case and nested class case.</p>
 	 * @throws LithTypeBuildException
 	 */
-	private void resolveName() throws LiBuildException {
+	private void resolveName() throws S8BuildException {
 		if(isBuildable) {
 			/* <code> */
 
 			if(typeAnnotation==null) {
-				throw new LiBuildException("Missing type annotation", baseType);
+				throw new S8BuildException("Missing type annotation", baseType);
 			}
 
 			Class<?> enclosingType = baseType.getEnclosingClass();
 			if(enclosingType!=null) {
 				S8ObjectType enclosingTypeAnnotation = enclosingType.getAnnotation(S8ObjectType.class);
 				if(enclosingTypeAnnotation==null) {
-					throw new LiBuildException("Missing enclosing type annotation", baseType);
+					throw new S8BuildException("Missing enclosing type annotation", baseType);
 				}	
 				name = typeAnnotation.name()+'@'+enclosingTypeAnnotation.name();
 			}
@@ -216,7 +216,7 @@ public class LiTypeBuilder {
 	 * @throws BohrTypeBuildingException 
 	 * @throws LthSerialException 
 	 */
-	public void crawl(Class<?> type, LiCodebaseBuilder codebaseBuilder) throws LiBuildException {
+	public void crawl(Class<?> type, LiCodebaseBuilder codebaseBuilder) throws S8BuildException {
 
 		/* <sub-types> */
 
@@ -287,7 +287,7 @@ public class LiTypeBuilder {
 
 
 
-	public void retrieveConstructor() throws LiBuildException {
+	public void retrieveConstructor() throws S8BuildException {
 		if(isBuildable) {
 			try {
 				/*
@@ -297,10 +297,10 @@ public class LiTypeBuilder {
 
 			} 
 			catch (NoSuchMethodException | SecurityException e) {
-				throw new LiBuildException("missing public constructor with parameters", baseType);
+				throw new S8BuildException("missing public constructor with parameters", baseType);
 			}
 			catch (ClassCastException e) {
-				throw new LiBuildException("Must inherit DkObject", baseType);
+				throw new S8BuildException("Must inherit DkObject", baseType);
 			}	
 		}
 	}
@@ -333,7 +333,7 @@ public class LiTypeBuilder {
 	 * @throws LthSerialException 
 	 * @throws BkException
 	 */
-	private void onField(LiCodebaseBuilder contextBuilder, Field field) throws LiBuildException {
+	private void onField(LiCodebaseBuilder contextBuilder, Field field) throws S8BuildException {
 
 		S8Field fieldAnnotation = field.getAnnotation(S8Field.class);
 		if(fieldAnnotation!=null) {
@@ -375,7 +375,7 @@ public class LiTypeBuilder {
 
 
 
-	public void onMethod(LiCodebaseBuilder codebaseBuilder, Method method) throws LiBuildException {
+	public void onMethod(LiCodebaseBuilder codebaseBuilder, Method method) throws S8BuildException {
 
 		boolean hasBeenCaptured = false;
 
@@ -435,7 +435,7 @@ public class LiTypeBuilder {
 			}
 		}
 		else if(hasBeenCaptured && setterAnnotation != null) {
-			throw new LiBuildException("Cannot be getter and setter at the same time");
+			throw new S8BuildException("Cannot be getter and setter at the same time");
 		}
 	}
 
@@ -443,12 +443,12 @@ public class LiTypeBuilder {
 
 	/**
 	 * Post build
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
-	public LiType build() throws LiBuildException {
+	public LiType build() throws S8BuildException {
 
 		if(!isBuildable) {
-			throw new LiBuildException("This type is not buildable");
+			throw new S8BuildException("This type is not buildable");
 		}
 
 		// generate type
@@ -477,7 +477,7 @@ public class LiTypeBuilder {
 		fieldBuildersByName.forEach((name, builder) -> {
 			try {
 				fieldsByName.put(name, builder.build(ordinator.getAndIncrement()));
-			} catch (LiBuildException e) {
+			} catch (S8BuildException e) {
 				if(isVerbose) {
 					e.printStackTrace();	
 				}

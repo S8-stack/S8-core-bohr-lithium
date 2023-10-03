@@ -2,11 +2,11 @@ package com.s8.io.bohr.lithium.type;
 
 import java.io.IOException;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
-import com.s8.io.bytes.alpha.ByteOutflow;
 
 /**
  * 
@@ -76,11 +76,11 @@ public class LiTypeComposer {
 	 * @param propertiesMap
 	 * @param outflowCode
 	 * @param type
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 * @throws LithTypeBuildException 
 	 * @throws LthSerialException
 	 */
-	public LiTypeComposer(LiType type, long typeCode) throws LiBuildException {
+	public LiTypeComposer(LiType type, long typeCode) throws S8BuildException {
 		super();
 		this.type = type;
 		this.typeCode = typeCode;
@@ -95,12 +95,12 @@ public class LiTypeComposer {
 			try {
 				fieldComposers[field.ordinal] = field.createComposer(code);
 			}
-			catch (LiIOException e) {
+			catch (S8IOException e) {
 				e.printStackTrace();
 			}	
 		});
 		if(indexer.lastFieldCode > 0xff) {
-			throw new LiBuildException("Field index exceeds 0xFF", type.getBaseType());
+			throw new S8BuildException("Field index exceeds 0xFF", type.getBaseType());
 		}
 	}
 

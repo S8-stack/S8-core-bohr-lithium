@@ -3,10 +3,10 @@ package com.s8.io.bohr.lithium.fields.collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.BuildScope.Binding;
 
@@ -20,7 +20,7 @@ import com.s8.io.bohr.lithium.type.BuildScope.Binding;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class S8ObjectListLiFieldDelta<T extends LiObject> extends LiFieldDelta {
+public class S8ObjectListLiFieldDelta<T extends SpaceS8Object> extends LiFieldDelta {
 
 	
 	public final S8ObjectListLiField<T> field;
@@ -43,7 +43,7 @@ public class S8ObjectListLiFieldDelta<T extends LiObject> extends LiFieldDelta {
 
 
 	@Override
-	public void operate(LiObject object, BuildScope scope) throws LiIOException {
+	public void operate(SpaceS8Object object, BuildScope scope) throws S8IOException {
 
 		if(indices!=null) {
 			int n = indices.length;
@@ -53,7 +53,7 @@ public class S8ObjectListLiFieldDelta<T extends LiObject> extends LiFieldDelta {
 			scope.appendBinding(new Binding() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public void resolve(BuildScope scope) throws LiIOException {
+				public void resolve(BuildScope scope) throws S8IOException {
 					for(int i=0; i<n; i++) {
 						String itemGphIndex = indices[i];
 						if(itemGphIndex != null) {

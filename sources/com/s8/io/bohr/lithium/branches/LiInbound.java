@@ -1,16 +1,16 @@
 package com.s8.io.bohr.lithium.branches;
 
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_JUMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_SEQUENCE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.CREATE_NODE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DECLARE_TYPE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.EXPOSE_NODE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.FRAME_FOOTER;
-import static com.s8.io.bohr.atom.BOHR_Keywords.FRAME_HEADER;
-import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_JUMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_SEQUENCE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.REMOVE_NODE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.UPDATE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_SEQUENCE;
+import static com.s8.api.bohr.BOHR_Keywords.CREATE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.DECLARE_TYPE;
+import static com.s8.api.bohr.BOHR_Keywords.EXPOSE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.FRAME_FOOTER;
+import static com.s8.api.bohr.BOHR_Keywords.FRAME_HEADER;
+import static com.s8.api.bohr.BOHR_Keywords.OPEN_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.OPEN_SEQUENCE;
+import static com.s8.api.bohr.BOHR_Keywords.REMOVE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.UPDATE_NODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.object.CreateLiObjectDelta;
 import com.s8.io.bohr.lithium.object.ExposeLiObjectDelta;
@@ -27,7 +28,6 @@ import com.s8.io.bohr.lithium.object.RemoveLiObjectDelta;
 import com.s8.io.bohr.lithium.object.UpdateLiObjectDelta;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.LiTypeParser;
-import com.s8.io.bytes.alpha.ByteInflow;
 
 
 /**
@@ -123,12 +123,12 @@ public class LiInbound {
 	 * 
 	 * @param code
 	 * @return
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public LiTypeParser getTypeParserByCode(long code) throws LiIOException {
+	public LiTypeParser getTypeParserByCode(long code) throws S8IOException {
 		LiTypeParser typeParser = typeParsersByCode.get(code);
 		if(typeParser == null) {
-			throw new LiIOException("Failed to find typeInflow for code: "+Long.toHexString(code));
+			throw new S8IOException("Failed to find typeInflow for code: "+Long.toHexString(code));
 		}
 		return typeParser;
 	}	
@@ -188,14 +188,14 @@ public class LiInbound {
 
 		/* check that this type code has not already been assigned */
 		if(typeParsersByCode.containsKey(typeCode)) {
-			throw new LiIOException("A type has already defined for code: "+typeCode+"->"+typeName
+			throw new S8IOException("A type has already defined for code: "+typeCode+"->"+typeName
 					+". See "+typeParsersByCode.get(typeCode).print(typeCode));
 		}
 		
 		/* find corresponding type */
 		LiType type = codebase.getTypeBySerialName(typeName);
 		if(type == null) {
-			throw new LiIOException("Failed to find type for name: "+typeName);
+			throw new S8IOException("Failed to find type for name: "+typeName);
 		}
 
 		/* create typeInflow*/
@@ -275,12 +275,12 @@ public class LiInbound {
 	}
 
 	
-	public void onDefineComment(String comment, LiGraphDelta branchDelta) throws LiIOException {
+	public void onDefineComment(String comment, LiGraphDelta branchDelta) throws S8IOException {
 		branchDelta.setComment(comment);
 	}
 
 	
-	public void onTimestamp(long t, LiGraphDelta branchDelta) throws LiIOException {
+	public void onTimestamp(long t, LiGraphDelta branchDelta) throws S8IOException {
 		branchDelta.setTimestamp(t);
 	}
 }

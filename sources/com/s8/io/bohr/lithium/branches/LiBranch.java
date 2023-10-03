@@ -5,11 +5,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.atom.S8BuildException;
-import com.s8.io.bohr.atom.S8Exception;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bytes.base64.Base64Composer;
 
 
@@ -82,7 +81,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	}
 
 	@Override
-	public void pushDelta(LiGraphDelta delta) throws LiIOException {
+	public void pushDelta(LiGraphDelta delta) throws S8IOException {
 
 		/* save delta */
 		this.deltas.add(delta);
@@ -120,10 +119,10 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	 * 
 	 * @return
 	 */
-	public LiObject[] getCurrentExposure() {
+	public SpaceS8Object[] getCurrentExposure() {
 		LiVertex[] vertices = graph.exposure;
 		int n = vertices.length;
-		LiObject[] objects = new LiObject[n];
+		SpaceS8Object[] objects = new SpaceS8Object[n];
 		for(int i = 0; i<n; i++) {
 			LiVertex vertex = vertices[i];
 			objects[i] = (vertex != null) ? vertex.object : null; 
@@ -137,7 +136,7 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	 * @param slot
 	 * @return
 	 */
-	public LiObject getExposed(int slot) {
+	public SpaceS8Object getExposed(int slot) {
 		LiVertex vertex = graph.exposure[slot];
 		return vertex != null ? vertex.object : null;
 	}
@@ -148,9 +147,9 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	 * 
 	 * @param slot
 	 * @param object
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public void expose(int slot, LiObject object) throws LiIOException {
+	public void expose(int slot, SpaceS8Object object) throws S8IOException {
 		graph.expose(slot, object);
 	}
 	
@@ -159,9 +158,9 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	/**
 	 * 
 	 * @param objects
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public void expose(LiObject[] objects) throws LiIOException {
+	public void expose(SpaceS8Object[] objects) throws S8IOException {
 		int range = objects.length;
 		for(int slot = 0; slot<range; slot++) { graph.expose(slot, objects[slot]); }
 
@@ -182,10 +181,10 @@ public class LiBranch implements LiGraphDeltaConsumer {
 	/**
 	 * 
 	 * @throws S8BuildException
-	 * @throws S8Exception
+	 * @throws S8IOException
 	 * @throws IOException
 	 */
-	public void commit() throws S8BuildException, S8Exception, IOException {
+	public void commit() throws S8BuildException, S8IOException, IOException {
 		deltas.add(graph.produceDiff());
 	}
 

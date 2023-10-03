@@ -8,12 +8,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import com.s8.io.bohr.atom.S8BuildException;
-import com.s8.io.bohr.atom.S8Exception;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.object.ExposeLiObjectDelta;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
 
@@ -90,7 +89,7 @@ public class LiGraph {
 	}
 
 
-	public void expose(int slot, LiObject object) throws LiIOException {
+	public void expose(int slot, SpaceS8Object object) throws S8IOException {
 		if(object != null) {
 			LiVertex vertex = resolveVertex(object);
 			exposure[slot] = vertex;	
@@ -102,7 +101,7 @@ public class LiGraph {
 	}
 
 
-	public LiObject retrieveObject(String index) {
+	public SpaceS8Object retrieveObject(String index) {
 		return vertices.get(index).object;
 	}
 
@@ -112,7 +111,7 @@ public class LiGraph {
 	public BuildScope createBuildScope() {
 		return new BuildScope() {
 			@Override
-			public LiObject retrieveObject(String index) {
+			public SpaceS8Object retrieveObject(String index) {
 				return vertices.get(index).object;
 			}
 		};
@@ -123,7 +122,7 @@ public class LiGraph {
 	public final ResolveScope resolveScope = new ResolveScope() {
 
 		@Override
-		public String resolveId(LiObject object) throws LiIOException {
+		public String resolveId(SpaceS8Object object) throws S8IOException {
 			if(object != null) {
 				return append(null, object).id;
 			}
@@ -136,16 +135,16 @@ public class LiGraph {
 
 
 
-	public LiVertex resolveVertex(LiObject object) throws LiIOException {
-		if(object == null) throw new LiIOException("Cannot resolve null object vertex");
+	public LiVertex resolveVertex(SpaceS8Object object) throws S8IOException {
+		if(object == null) throw new S8IOException("Cannot resolve null object vertex");
 		return append(null, object);
 	}
 
 
 
-	public LiVertex append(String id, LiObject object) throws LiIOException {
+	public LiVertex append(String id, SpaceS8Object object) throws S8IOException {
 
-		if(object == null) { throw new LiIOException("Cannot append null obejct"); }
+		if(object == null) { throw new S8IOException("Cannot append null obejct"); }
 
 		/* retrieve object vertex */
 		LiVertex vertex = (LiVertex) object.S8_vertex;
@@ -206,10 +205,10 @@ public class LiGraph {
 	 * 
 	 * @param outflow
 	 * @throws IOException 
-	 * @throws S8Exception 
+	 * @throws S8IOException 
 	 * @throws S8BuildException 
 	 */
-	public LiGraphDelta produceDiff() throws S8BuildException, S8Exception, IOException {
+	public LiGraphDelta produceDiff() throws S8BuildException, S8IOException, IOException {
 
 		if(!hasUnpublishedChanges) {
 			// TODO

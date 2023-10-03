@@ -1,18 +1,18 @@
 package com.s8.io.bohr.lithium.branches;
 
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_JUMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_COMMENT;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_COMMENT;
+import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
+import static com.s8.api.bohr.BOHR_Keywords.OPEN_JUMP;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.object.LiObjectDelta;
 import com.s8.io.bohr.lithium.type.BuildScope;
-import com.s8.io.bytes.alpha.ByteOutflow;
 
 
 /**
@@ -103,10 +103,10 @@ public class LiGraphDelta {
 	 * @param graph
 	 * @throws NdIOException
 	 */
-	public void operate(LiGraph branch) throws LiIOException {
+	public void operate(LiGraph branch) throws S8IOException {
 		/* check version */
 		if(targetVersion != (branch.version + 1)) { 
-			throw new LiIOException("Mismatch in versions");
+			throw new S8IOException("Mismatch in versions");
 		}
 		
 		BuildScope scope = branch.createBuildScope();

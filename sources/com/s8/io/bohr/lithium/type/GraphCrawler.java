@@ -1,7 +1,7 @@
 package com.s8.io.bohr.lithium.type;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 
 /**
  * 
@@ -16,9 +16,9 @@ public interface GraphCrawler {
 	/**
 	 * 
 	 * @param object
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
-	public void accept(LiObject object);
+	public void accept(SpaceS8Object object);
 	
 	
 }

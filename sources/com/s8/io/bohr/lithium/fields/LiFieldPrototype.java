@@ -3,7 +3,7 @@ package com.s8.io.bohr.lithium.fields;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
+import com.s8.api.exceptions.S8BuildException;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 
@@ -24,9 +24,9 @@ public abstract class LiFieldPrototype {
 	 * 
 	 * @param field
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
-	public abstract LiFieldProperties captureField(Field field) throws LiBuildException;
+	public abstract LiFieldProperties captureField(Field field) throws S8BuildException;
 	
 	
 	/**
@@ -34,16 +34,16 @@ public abstract class LiFieldPrototype {
 	 * @param method
 	 * @return
 	 */
-	public abstract LiFieldProperties captureGetter(Method method) throws LiBuildException;
+	public abstract LiFieldProperties captureGetter(Method method) throws S8BuildException;
 	
 	
 	/**
 	 * 
 	 * @param method
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
-	public abstract LiFieldProperties captureSetter(Method method) throws LiBuildException;
+	public abstract LiFieldProperties captureSetter(Method method) throws S8BuildException;
 	
 	
 	/**

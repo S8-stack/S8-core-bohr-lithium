@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Queue;
 
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
 import com.s8.io.bohr.lithium.type.ResolveScope;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 /**
  * 
@@ -93,7 +93,7 @@ public abstract class LiField {
 	 * @return
 	 * @throws  
 	 */
-	public abstract LiFieldComposer createComposer(int code) throws LiIOException;
+	public abstract LiFieldComposer createComposer(int code) throws S8IOException;
 	
 	
 	public abstract LiFieldParser createParser(ByteInflow inflow) throws IOException;
@@ -101,7 +101,7 @@ public abstract class LiField {
 	
 
 
-	public abstract void computeFootprint(LiObject object, MemoryFootprint weight) throws LiIOException;
+	public abstract void computeFootprint(SpaceS8Object object, MemoryFootprint weight) throws S8IOException;
 
 	/**
 	 * Collect all INTERNAL (belonging to this block) object not already in the
@@ -114,14 +114,14 @@ public abstract class LiField {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public abstract void sweep(LiObject object, GraphCrawler crawler) throws LiIOException;
+	public abstract void sweep(SpaceS8Object object, GraphCrawler crawler) throws S8IOException;
 
 	/**
 	 * Collect all external blocks with flag not already set to true
 	 * 
 	 * @param object
 	 */
-	public abstract void collectReferencedBlocks(LiObject object, Queue<String> references);
+	public abstract void collectReferencedBlocks(SpaceS8Object object, Queue<String> references);
 
 	
 
@@ -138,7 +138,7 @@ public abstract class LiField {
 	 * @param bindings
 	 * @throws LthSerialException
 	 */
-	public abstract void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException;
+	public abstract void deepClone(SpaceS8Object origin, ResolveScope resolveScope, SpaceS8Object clone, BuildScope scope) throws S8IOException;
 
 	
 	/**
@@ -148,11 +148,11 @@ public abstract class LiField {
 	 * @return
 	 * @throws IOException
 	 */
-	public abstract LiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException;
+	public abstract LiFieldDelta produceDiff(SpaceS8Object object, ResolveScope scope) throws IOException;
 
 	
 
-	public void print(LiObject object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(SpaceS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		writer.append("(");
 		writer.append(printType());
 		writer.append(") ");
@@ -168,7 +168,7 @@ public abstract class LiField {
 	public abstract String printType();
 
 
-	protected abstract void printValue(LiObject object, ResolveScope scope, Writer writer) throws LiIOException, 
+	protected abstract void printValue(SpaceS8Object object, ResolveScope scope, Writer writer) throws S8IOException, 
 	IOException, S8ShellStructureException;
 
 	
@@ -179,7 +179,7 @@ public abstract class LiField {
 	 * @return true is the object has been resolved, false otherwise
 	 * @throws LthSerialException 
 	 */
-	public abstract boolean isValueResolved(LiObject object) throws LiIOException;
+	public abstract boolean isValueResolved(SpaceS8Object object) throws S8IOException;
 
 	
 }

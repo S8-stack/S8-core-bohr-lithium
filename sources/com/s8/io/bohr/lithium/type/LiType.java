@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.fields.LiField;
-import com.s8.io.bohr.lithium.object.LiObject;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -115,14 +115,14 @@ public class LiType {
 	 * @param object
 	 * @param footprint
 	 */
-	public void computeFootprint(LiObject object, MemoryFootprint footprint) {
+	public void computeFootprint(SpaceS8Object object, MemoryFootprint footprint) {
 		footprint.reportInstance();
 		fieldsByName.forEach((name, handler) -> {  
 			try {
 				footprint.reportEntry();
 
 				handler.computeFootprint(object, footprint);
-			} catch (LiIOException e) {
+			} catch (S8IOException e) {
 				e.printStackTrace();
 			} 
 		});
@@ -135,16 +135,16 @@ public class LiType {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public LiObject createNewInstance() throws LiIOException {
+	public SpaceS8Object createNewInstance() throws S8IOException {
 		try {
-			return (LiObject) constructor.newInstance(new Object[]{});
+			return (SpaceS8Object) constructor.newInstance(new Object[]{});
 		}
 		catch (InstantiationException 
 				| IllegalAccessException 
 				| IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
-			throw new LiIOException("instance creation failed due to constructor call error", baseType, e);
+			throw new S8IOException("instance creation failed due to constructor call error", baseType, e);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class LiType {
 	 * @throws IOException 
 	 * @throws S8ShellStructureException 
 	 */
-	public void sweep(LiObject object, GraphCrawler crawler) throws LiIOException {
+	public void sweep(SpaceS8Object object, GraphCrawler crawler) throws S8IOException {
 		int nFields = fields.length;
 		for(int i = 0; i<nFields; i++) { fields[i].sweep(object, crawler); }
 	}
@@ -188,7 +188,7 @@ public class LiType {
 	 * @param object
 	 * @param references
 	 */
-	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
+	public void collectReferencedBlocks(SpaceS8Object object, Queue<String> references) {
 		for(LiField entryHandler : fieldsByName.values()) {
 			entryHandler.collectReferencedBlocks(object, references);	
 		}
@@ -202,8 +202,8 @@ public class LiType {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public LiObject deepClone(LiObject origin, ResolveScope resolveScope, BuildScope scope) throws LiIOException {
-		LiObject clone = createNewInstance();
+	public SpaceS8Object deepClone(SpaceS8Object origin, ResolveScope resolveScope, BuildScope scope) throws S8IOException {
+		SpaceS8Object clone = createNewInstance();
 		for(LiField field : fields) {
 			field.deepClone(origin, resolveScope, clone, scope);
 		}
@@ -240,7 +240,7 @@ public class LiType {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void print(LiObject object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(SpaceS8Object object, ResolveScope scope, Writer writer) throws IOException, S8ShellStructureException {
 		debugModule.print(object, scope, writer);
 	}
 

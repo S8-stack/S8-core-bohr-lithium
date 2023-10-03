@@ -1,8 +1,8 @@
 package com.s8.io.bohr.lithium.fields.objects;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.BuildScope.Binding;
 
@@ -40,14 +40,14 @@ public class S8ObjectLiFieldDelta extends LiFieldDelta {
 
 
 	@Override
-	public void operate(LiObject object, BuildScope scope) throws LiIOException {
+	public void operate(SpaceS8Object object, BuildScope scope) throws S8IOException {
 
 		if(index != null) {
 			scope.appendBinding(new Binding() {
 
 				@Override
-				public void resolve(BuildScope scope) throws LiIOException {
-					LiObject struct = scope.retrieveObject(index);
+				public void resolve(BuildScope scope) throws S8IOException {
+					SpaceS8Object struct = scope.retrieveObject(index);
 					field.handler.set(object, struct);
 				}
 			});

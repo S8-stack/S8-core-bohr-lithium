@@ -3,8 +3,8 @@ package com.s8.io.bohr.lithium.type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 
 
 /**
@@ -37,14 +37,14 @@ public abstract class BuildScope {
 	 * @param index
 	 * @return
 	 */
-	public abstract LiObject retrieveObject(String index);
+	public abstract SpaceS8Object retrieveObject(String index);
 	
 	/**
 	 * <p><b>ALWAYS RESOLVE AFTER DESERIALIZATION</b></p>
 	 * 
 	 * @throws LthSerialException
 	 */
-	public void process() throws LiIOException {
+	public void process() throws S8IOException {
 
 		// screen all bindings
 		for(Binding binding : bindings) {
@@ -72,7 +72,7 @@ public abstract class BuildScope {
 		 * @return false if the binding has been successfully resolved (nothing else to do)
 		 * @throws LthSerialException
 		 */
-		public abstract void resolve(BuildScope scope) throws LiIOException;
+		public abstract void resolve(BuildScope scope) throws S8IOException;
 
 	}
 	

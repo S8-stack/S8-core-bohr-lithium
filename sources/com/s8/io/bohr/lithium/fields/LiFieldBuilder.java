@@ -3,7 +3,7 @@ package com.s8.io.bohr.lithium.fields;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
+import com.s8.api.exceptions.S8BuildException;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 
@@ -42,16 +42,16 @@ public abstract class LiFieldBuilder {
 	/**
 	 * 
 	 * @param field
-	 * @throws LiBuildException
+	 * @throws S8BuildException
 	 */
-	public void attachField(Field field) throws LiBuildException {
+	public void attachField(Field field) throws S8BuildException {
 		LiFieldProperties props = this.getPrototype().captureField(field);
 		if (props != null) {
 			this.properties.merge(props);
 			this.handler.attachField(field);
 		}
 		else {
-			throw new LiBuildException("Field type is not matching field builder", field);
+			throw new S8BuildException("Field type is not matching field builder", field);
 		}
 	}
 	
@@ -62,14 +62,14 @@ public abstract class LiFieldBuilder {
 	 * @param isValidationEnabled
 	 * @throws LithTypeBuildException
 	 */
-	public void attachGetMethod(Method method) throws LiBuildException {
+	public void attachGetMethod(Method method) throws S8BuildException {
 		LiFieldProperties props = getPrototype().captureGetter(method);
 		if (props != null) {
 			properties.merge(props);
 			handler.attachGetMethod(method);
 		}
 		else {
-			throw new LiBuildException("Getter type is not matching", method);
+			throw new S8BuildException("Getter type is not matching", method);
 		}
 	}
 
@@ -79,14 +79,14 @@ public abstract class LiFieldBuilder {
 	 * @param isValidationEnabled
 	 * @throws LithTypeBuildException
 	 */
-	public void attachSetMethod(Method method) throws LiBuildException {
+	public void attachSetMethod(Method method) throws S8BuildException {
 		LiFieldProperties props = getPrototype().captureSetter(method);
 		if (props != null) {
 			properties.merge(props);
 			handler.attachSetMethod(method);
 		}
 		else {
-			throw new LiBuildException("Getter type is not matching", method);
+			throw new S8BuildException("Getter type is not matching", method);
 		}
 	}
 	
@@ -102,9 +102,10 @@ public abstract class LiFieldBuilder {
 	/**
 	 * 
 	 * @return
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
+	 * @throws com.s8.io.bohr.atom.S8BuildException 
 	 */
-	public abstract LiField build(int ordinal) throws LiBuildException;
+	public abstract LiField build(int ordinal) throws S8BuildException;
 
 
 }

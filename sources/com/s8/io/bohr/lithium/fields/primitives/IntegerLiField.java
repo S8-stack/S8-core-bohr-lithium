@@ -3,22 +3,22 @@ package com.s8.io.bohr.lithium.fields.primitives;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.io.bohr.atom.BOHR_Types;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.ResolveScope;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class IntegerLiField extends PrimitiveLiField {
 		}
 
 		@Override
-		public LiField build(int ordinal) throws LiBuildException {
+		public LiField build(int ordinal) throws S8BuildException {
 			return new IntegerLiField(ordinal, properties, handler);
 		}		
 	}
@@ -59,9 +59,9 @@ public class IntegerLiField extends PrimitiveLiField {
 	 * 
 	 * @param outboundTypeName
 	 * @param handler
-	 * @throws LiBuildException 
+	 * @throws S8BuildException 
 	 */
-	public IntegerLiField(int ordinal, LiFieldProperties properties, LiHandler handler) throws LiBuildException{
+	public IntegerLiField(int ordinal, LiFieldProperties properties, LiHandler handler) throws S8BuildException{
 		super(ordinal, properties, handler);
 	}
 
@@ -71,20 +71,20 @@ public class IntegerLiField extends PrimitiveLiField {
 	}
 
 	@Override
-	public void computeFootprint(LiObject object, MemoryFootprint weight) {
+	public void computeFootprint(SpaceS8Object object, MemoryFootprint weight) {
 		weight.reportBytes(4);
 	}
 
 
 	@Override
-	public void deepClone(LiObject origin, ResolveScope resolveScope, LiObject clone, BuildScope scope) throws LiIOException {
+	public void deepClone(SpaceS8Object origin, ResolveScope resolveScope, SpaceS8Object clone, BuildScope scope) throws S8IOException {
 		int value = handler.getInteger(origin);
 		handler.setInteger(clone, value);
 	}
 
 	
 	@Override
-	public IntegerLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+	public IntegerLiFieldDelta produceDiff(SpaceS8Object object, ResolveScope scope) throws IOException {
 		return new IntegerLiFieldDelta(this, handler.getInteger(object));
 	}
 
@@ -96,7 +96,7 @@ public class IntegerLiField extends PrimitiveLiField {
 
 
 	@Override
-	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(SpaceS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		writer.write(Long.toString(handler.getLong(object)));
 	}
 
@@ -118,7 +118,7 @@ public class IntegerLiField extends PrimitiveLiField {
 		case BOHR_Types.INT16 : return new Int16_Inflow();
 		case BOHR_Types.INT32 : return new Int32_Inflow();
 
-		default : throw new LiIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
+		default : throw new S8IOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
 	}
 
@@ -182,7 +182,7 @@ public class IntegerLiField extends PrimitiveLiField {
 	/* <IO-outflow-section> */
 
 	@Override
-	public LiFieldComposer createComposer(int code) throws LiIOException {
+	public LiFieldComposer createComposer(int code) throws S8IOException {
 		switch(flow) {
 
 		case "uint8" : return new UInt8_Outflow(code);
@@ -193,7 +193,7 @@ public class IntegerLiField extends PrimitiveLiField {
 		case "int16" : return new Int16_Outflow(code);
 		case DEFAULT_FLOW_TAG: case "int32" : return new Int32_Outflow(code);
 
-		default : throw new LiIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new S8IOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 

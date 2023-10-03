@@ -1,8 +1,8 @@
 package com.s8.io.bohr.lithium.demos.repo2;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
 
 
 
@@ -28,7 +28,7 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 	
 	
 	@Override
-	public void init() throws LiIOException {
+	public void init() throws S8IOException {
 		baseInit();
 		xTableDimension = Math.random();
 		yTableDimension = Math.random();
@@ -36,7 +36,7 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 	}
 
 	
-	public static MyCommercialMeetingRoom create() throws LiIOException {
+	public static MyCommercialMeetingRoom create() throws S8IOException {
 		MyCommercialMeetingRoom room = new MyCommercialMeetingRoom();
 		room.init();
 		return room;
@@ -44,7 +44,7 @@ public class MyCommercialMeetingRoom extends MyCommercialFloorElement {
 
 
 	@Override
-	public void variate() throws LiIOException {
+	public void variate() throws S8IOException {
 		double u = Math.random();
 		if(u<0.3) {
 			init();

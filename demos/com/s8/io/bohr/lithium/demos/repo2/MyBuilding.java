@@ -3,10 +3,10 @@ package com.s8.io.bohr.lithium.demos.repo2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.space.SpaceS8Object;
 
 
 /**
@@ -18,7 +18,7 @@ import com.s8.io.bohr.lithium.object.LiObject;
  * 
  */
 @S8ObjectType(name = "my-building")
-public class MyBuilding extends LiObject {
+public class MyBuilding extends SpaceS8Object {
 
 	
 	public @S8Field(name = "n-floors") int nFloors;
@@ -35,7 +35,7 @@ public class MyBuilding extends LiObject {
 	}
 	
 
-	private void init() throws LiIOException {
+	private void init() throws S8IOException {
 		nFloors = (int) (Math.random()*128) + 3;
 		lowerGroundFloor = MyFloor.create();
 		groundFloor = MyFloor.create();
@@ -48,13 +48,13 @@ public class MyBuilding extends LiObject {
 	}
 
 	
-	public static MyBuilding create() throws LiIOException {
+	public static MyBuilding create() throws S8IOException {
 		MyBuilding building = new MyBuilding();
 		building.init();
 		return building;
 	}
 	
-	public void variate() throws LiIOException {
+	public void variate() throws S8IOException {
 		
 		
 		lowerGroundFloor.init();

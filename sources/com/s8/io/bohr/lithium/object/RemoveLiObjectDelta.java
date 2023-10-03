@@ -2,12 +2,12 @@ package com.s8.io.bohr.lithium.object;
 
 import java.io.IOException;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
 import com.s8.io.bohr.lithium.type.BuildScope;
-import com.s8.io.bytes.alpha.ByteOutflow;
 
 
 /**
@@ -23,7 +23,7 @@ public class RemoveLiObjectDelta extends LiObjectDelta {
 	}
 
 	@Override
-	public void operate(LiGraph graph, BuildScope scope) throws LiIOException {
+	public void operate(LiGraph graph, BuildScope scope) throws S8IOException {
 		// TODO
 	}
 

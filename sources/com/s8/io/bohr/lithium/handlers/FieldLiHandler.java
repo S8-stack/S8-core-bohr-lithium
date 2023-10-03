@@ -3,10 +3,10 @@ package com.s8.io.bohr.lithium.handlers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
 
 
 /**
@@ -19,7 +19,7 @@ import com.s8.io.bohr.lithium.exceptions.LiIOException;
 public class FieldLiHandler implements LiHandler {
 
 
-	public static LiHandler init(Field field) throws LiBuildException {
+	public static LiHandler init(Field field) throws S8BuildException {
 		FieldLiHandler handler = new FieldLiHandler();
 		handler.attachField(field);
 		return handler;
@@ -60,9 +60,9 @@ public class FieldLiHandler implements LiHandler {
 
 
 	@Override
-	public void attachField(Field field) throws LiBuildException {
+	public void attachField(Field field) throws S8BuildException {
 		if(this.field!=null) {
-			throw new LiBuildException("Conflict in field definition between "+this.field+" and "+field, field);
+			throw new S8BuildException("Conflict in field definition between "+this.field+" and "+field, field);
 		}
 		
 		/*
@@ -75,13 +75,13 @@ public class FieldLiHandler implements LiHandler {
 	}
 
 	@Override
-	public void attachGetMethod(Method method) throws LiBuildException {
-		throw new LiBuildException("This field is of FIELD_BASED type and cannot be added a getter method", method);
+	public void attachGetMethod(Method method) throws S8BuildException {
+		throw new S8BuildException("This field is of FIELD_BASED type and cannot be added a getter method", method);
 	}
 
 	@Override
-	public void attachSetMethod(Method method) throws LiBuildException {
-		throw new LiBuildException("This field is of FIELD_BASED type and cannot be added a setter method", method);	
+	public void attachSetMethod(Method method) throws S8BuildException {
+		throw new S8BuildException("This field is of FIELD_BASED type and cannot be added a setter method", method);	
 	}
 
 
@@ -115,194 +115,194 @@ public class FieldLiHandler implements LiHandler {
 
 
 	@Override
-	public Object get(Object object) throws LiIOException {
+	public Object get(Object object) throws S8IOException {
 		try {
 			return field.get(object);
 		} 
 		catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new LiIOException(e.getMessage(), field, e);
+			throw new S8IOException(e.getMessage(), field, e);
 		}
 	}
 
 
 	@Override
-	public void set(Object object, Object value) throws LiIOException {
+	public void set(Object object, Object value) throws S8IOException {
 		try {
 			field.set(object, value);
 		}
 		catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new LiIOException(e.getMessage(), field, e);
+			throw new S8IOException(e.getMessage(), field, e);
 		}
 	}
 
 
 	@Override
-	public void setByte(Object object, byte value) throws LiIOException {
+	public void setByte(Object object, byte value) throws S8IOException {
 		try {
 			field.setByte(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 	@Override
-	public byte getByte(Object object) throws LiIOException {
+	public byte getByte(Object object) throws S8IOException {
 		try {
 			return field.getByte(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read boolean field", field, cause);
+			throw new S8IOException("failed to read boolean field", field, cause);
 		}
 	}
 	
 	@Override
-	public void setBoolean(Object object, boolean value) throws LiIOException {
+	public void setBoolean(Object object, boolean value) throws S8IOException {
 		try {
 			field.setBoolean(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 	@Override
-	public boolean getBoolean(Object object) throws LiIOException {
+	public boolean getBoolean(Object object) throws S8IOException {
 		try {
 			return field.getBoolean(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read boolean field", field, cause);
+			throw new S8IOException("failed to read boolean field", field, cause);
 		}
 	}
 
 
 	@Override
-	public void setDouble(Object object, double value) throws LiIOException {
+	public void setDouble(Object object, double value) throws S8IOException {
 		try {
 			field.setDouble(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public double getDouble(Object object) throws LiIOException {
+	public double getDouble(Object object) throws S8IOException {
 		try {
 			return field.getDouble(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 	
 	
 	@Override
-	public void setFloat(Object object, float value) throws LiIOException {
+	public void setFloat(Object object, float value) throws S8IOException {
 		try {
 			field.setFloat(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public float getFloat(Object object) throws LiIOException {
+	public float getFloat(Object object) throws S8IOException {
 		try {
 			return field.getFloat(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 	
 	
 	@Override
-	public void setShort(Object object, short value) throws LiIOException {
+	public void setShort(Object object, short value) throws S8IOException {
 		try {
 			field.setShort(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public short getShort(Object object) throws LiIOException {
+	public short getShort(Object object) throws S8IOException {
 		try {
 			return field.getShort(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 	
 	@Override
-	public void setInteger(Object object, int value) throws LiIOException {
+	public void setInteger(Object object, int value) throws S8IOException {
 		try {
 			field.setInt(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public int getInteger(Object object) throws LiIOException {
+	public int getInteger(Object object) throws S8IOException {
 		try {
 			return field.getInt(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 	
 	@Override
-	public void setLong(Object object, long value) throws LiIOException {
+	public void setLong(Object object, long value) throws S8IOException {
 		try {
 			field.setLong(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public long getLong(Object object) throws LiIOException {
+	public long getLong(Object object) throws S8IOException {
 		try {
 			return field.getLong(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 	
 
 	@Override
-	public void setString(Object object, String value) throws LiIOException {
+	public void setString(Object object, String value) throws S8IOException {
 		try {
 			field.set(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 
 
 	@Override
-	public String getString(Object object) throws LiIOException {
+	public String getString(Object object) throws S8IOException {
 		try {
 			return (String) field.get(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new LiIOException("failed to read long field", field, cause);
+			throw new S8IOException("failed to read long field", field, cause);
 		}
 	}
 

@@ -3,9 +3,9 @@ package com.s8.io.bohr.lithium.branches;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.ResolveScope;
 
@@ -40,10 +40,10 @@ public class DebugModule {
 		graph.vertices.forEach((index, vertex) -> {
 			try {
 				LiType type = vertex.type;
-				LiObject object = vertex.getObject();
+				SpaceS8Object object = vertex.getObject();
 				type.print(object, scope, writer);
 			} 
-			catch (LiIOException e) {
+			catch (S8IOException e) {
 				e.printStackTrace();
 			} 
 			catch (IOException e) {

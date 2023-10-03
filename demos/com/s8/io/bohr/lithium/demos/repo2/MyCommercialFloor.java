@@ -3,9 +3,9 @@ package com.s8.io.bohr.lithium.demos.repo2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
 
 
 /**
@@ -31,7 +31,7 @@ public class MyCommercialFloor extends MyFloor {
 	
 	
 	@Override
-	public void init() throws LiIOException {
+	public void init() throws S8IOException {
 		baseInit();
 		
 		int n = (int) (Math.random()*12) + 4;
@@ -45,7 +45,7 @@ public class MyCommercialFloor extends MyFloor {
 
 
 	@Override
-	protected void variate() throws LiIOException {
+	protected void variate() throws S8IOException {
 		double u = Math.random();
 		if(u<0.2) {
 			init();
@@ -60,7 +60,7 @@ public class MyCommercialFloor extends MyFloor {
 		reportFieldUpdate("elements");
 	}
 	
-	public static MyCommercialFloor create() throws LiIOException {
+	public static MyCommercialFloor create() throws S8IOException {
 		MyCommercialFloor floor = new MyCommercialFloor();
 		floor.init();
 		return floor;

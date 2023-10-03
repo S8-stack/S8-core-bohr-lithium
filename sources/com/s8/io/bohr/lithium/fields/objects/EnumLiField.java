@@ -6,12 +6,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.BOHR_Types;
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8Setter;
-import com.s8.io.bohr.lithium.exceptions.LiBuildException;
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8Setter;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
@@ -19,16 +23,12 @@ import com.s8.io.bohr.lithium.fields.LiFieldDelta;
 import com.s8.io.bohr.lithium.fields.LiFieldParser;
 import com.s8.io.bohr.lithium.fields.LiFieldPrototype;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties0T;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties1T;
 import com.s8.io.bohr.lithium.type.BuildScope;
 import com.s8.io.bohr.lithium.type.GraphCrawler;
 import com.s8.io.bohr.lithium.type.ResolveScope;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -48,7 +48,7 @@ public class EnumLiField extends LiField {
 
 
 		@Override
-		public LiFieldProperties captureField(Field field) throws LiBuildException {
+		public LiFieldProperties captureField(Field field) throws S8BuildException {
 			Class<?> baseType = field.getType();
 			if(baseType.isEnum()) {
 				S8Field annotation = field.getAnnotation(S8Field.class);
@@ -64,7 +64,7 @@ public class EnumLiField extends LiField {
 
 
 		@Override
-		public LiFieldProperties captureSetter(Method method) throws LiBuildException {
+		public LiFieldProperties captureSetter(Method method) throws S8BuildException {
 			Class<?> baseType = method.getParameterTypes()[0];
 			S8Setter annotation = method.getAnnotation(S8Setter.class);
 			if(annotation != null) {
@@ -74,7 +74,7 @@ public class EnumLiField extends LiField {
 					return properties;
 				}
 				else {
-					throw new LiBuildException("S8Annotated field of type List must have its "
+					throw new S8BuildException("S8Annotated field of type List must have its "
 							+"parameterized type inheriting from S8Object", method);
 				}
 			}
@@ -82,7 +82,7 @@ public class EnumLiField extends LiField {
 		}
 
 		@Override
-		public LiFieldProperties captureGetter(Method method) throws LiBuildException {
+		public LiFieldProperties captureGetter(Method method) throws S8BuildException {
 			Class<?> baseType = method.getReturnType();
 
 			S8Getter annotation = method.getAnnotation(S8Getter.class);
@@ -93,7 +93,7 @@ public class EnumLiField extends LiField {
 					return properties;
 				}
 				else {
-					throw new LiBuildException("S8Annotated field of type List must have its "
+					throw new S8BuildException("S8Annotated field of type List must have its "
 							+"parameterized type inheriting from S8Object", method);
 
 				}
@@ -122,7 +122,7 @@ public class EnumLiField extends LiField {
 		}
 
 		@Override
-		public LiField build(int ordinal) throws LiBuildException {
+		public LiField build(int ordinal) throws S8BuildException {
 			return new EnumLiField(ordinal, properties, handler);
 		}
 	}
@@ -139,7 +139,7 @@ public class EnumLiField extends LiField {
 	 * @param ordinal
 	 * @param properties
 	 * @param handler
-	 * @throws LiIOException
+	 * @throws S8IOException
 	 */
 	public EnumLiField(int ordinal, LiFieldProperties properties, LiHandler handler) {
 		super(ordinal, properties, handler);
@@ -149,20 +149,20 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public void computeFootprint(LiObject object, MemoryFootprint weight) {
+	public void computeFootprint(SpaceS8Object object, MemoryFootprint weight) {
 		weight.reportInstance();
 		weight.reportBytes(4); // int ordinal
 	}
 
 
 	@Override
-	public void collectReferencedBlocks(LiObject object, Queue<String> references) {
+	public void collectReferencedBlocks(SpaceS8Object object, Queue<String> references) {
 		//no blocks to collect
 	}
 
 
 	@Override
-	public void sweep(LiObject object, GraphCrawler crawler) {
+	public void sweep(SpaceS8Object object, GraphCrawler crawler) {
 		// nothing to collect
 	}
 
@@ -175,7 +175,7 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public void deepClone(LiObject origin, ResolveScope rScope, LiObject clone, BuildScope scope) throws LiIOException {
+	public void deepClone(SpaceS8Object origin, ResolveScope rScope, SpaceS8Object clone, BuildScope scope) throws S8IOException {
 		Object value = handler.get(origin);
 		handler.set(clone, value);
 	}
@@ -183,14 +183,14 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public EnumLiFieldDelta produceDiff(LiObject object, ResolveScope scope) throws IOException {
+	public EnumLiFieldDelta produceDiff(SpaceS8Object object, ResolveScope scope) throws IOException {
 		return new EnumLiFieldDelta(this, handler.get(object));
 	}
 
 	
 
 	@Override
-	protected void printValue(LiObject object, ResolveScope scope, Writer writer) throws IOException {
+	protected void printValue(SpaceS8Object object, ResolveScope scope, Writer writer) throws IOException {
 		Object value = handler.get(object);
 		if(value!=null) {
 			Enum<?> enumValue = (Enum<?>) value;
@@ -209,7 +209,7 @@ public class EnumLiField extends LiField {
 
 
 	@Override
-	public boolean isValueResolved(LiObject object) {
+	public boolean isValueResolved(SpaceS8Object object) {
 		return true; // always resolved
 	}
 
@@ -223,7 +223,7 @@ public class EnumLiField extends LiField {
 		case BOHR_Types.UINT8 : return new UInt8_Inflow();
 		case BOHR_Types.UINT16 : return new UInt16_Inflow();
 		case BOHR_Types.UINT32 : return new UInt32_Inflow();
-		default : throw new LiIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
+		default : throw new S8IOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
 	}
 
@@ -267,7 +267,7 @@ public class EnumLiField extends LiField {
 
 	/* <IO-outflow-section> */
 	@Override
-	public LiFieldComposer createComposer(int code) throws LiIOException {
+	public LiFieldComposer createComposer(int code) throws S8IOException {
 		switch(flow) {
 		case "uint8" : return new UInt8_Outflow(code);
 		case "uint16" : return new UInt16_Outflow(code);
@@ -282,7 +282,7 @@ public class EnumLiField extends LiField {
 			else {
 				return new UInt32_Outflow(code);
 			}
-		default : throw new LiIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new S8IOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 

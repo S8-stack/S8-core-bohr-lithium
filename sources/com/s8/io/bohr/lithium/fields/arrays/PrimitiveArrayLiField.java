@@ -1,7 +1,7 @@
 package com.s8.io.bohr.lithium.fields.arrays;
 
 
-import com.s8.io.bohr.lithium.exceptions.LiIOException;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.io.bohr.lithium.fields.primitives.PrimitiveLiField;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;
@@ -32,7 +32,7 @@ public abstract class PrimitiveArrayLiField extends PrimitiveLiField {
 	 * @param array
 	 * @throws LthSerialException
 	 */
-	public void setValue(Object object, Object array) throws LiIOException {
+	public void setValue(Object object, Object array) throws S8IOException {
 		handler.set(object, array);
 	}
 
