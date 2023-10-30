@@ -18,7 +18,7 @@ import com.s8.api.objects.annotations.S8Getter;
 import com.s8.api.objects.annotations.S8Setter;
 import com.s8.api.objects.serial.BohrSerializable;
 import com.s8.api.objects.space.SpaceS8Object;
-import com.s8.io.bohr.atom.serial.BohrSerialUtilities;
+import com.s8.core.io.bohr.atom.serial.BohrSerialUtilities;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;

@@ -13,7 +13,7 @@ import java.util.Queue;
 import com.s8.api.bytes.MemoryFootprint;
 import com.s8.api.exceptions.S8IOException;
 import com.s8.api.objects.space.SpaceS8Object;
-import com.s8.io.bohr.atom.S8ShellStructureException;
+import com.s8.core.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.lithium.fields.LiField;
 
 
