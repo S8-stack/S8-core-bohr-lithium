@@ -1,16 +1,16 @@
 package com.s8.io.bohr.lithium.branches;
 
-import static com.s8.api.bohr.BOHR_Keywords.CLOSE_JUMP;
-import static com.s8.api.bohr.BOHR_Keywords.CLOSE_SEQUENCE;
-import static com.s8.api.bohr.BOHR_Keywords.CREATE_NODE;
-import static com.s8.api.bohr.BOHR_Keywords.DECLARE_TYPE;
-import static com.s8.api.bohr.BOHR_Keywords.EXPOSE_NODE;
-import static com.s8.api.bohr.BOHR_Keywords.FRAME_FOOTER;
-import static com.s8.api.bohr.BOHR_Keywords.FRAME_HEADER;
-import static com.s8.api.bohr.BOHR_Keywords.OPEN_JUMP;
-import static com.s8.api.bohr.BOHR_Keywords.OPEN_SEQUENCE;
-import static com.s8.api.bohr.BOHR_Keywords.REMOVE_NODE;
-import static com.s8.api.bohr.BOHR_Keywords.UPDATE_NODE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.CLOSE_JUMP;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.CLOSE_SEQUENCE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.CREATE_NODE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.DECLARE_TYPE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.EXPOSE_NODE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.FRAME_FOOTER;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.FRAME_HEADER;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.OPEN_JUMP;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.OPEN_SEQUENCE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.REMOVE_NODE;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.UPDATE_NODE;
 
 import java.io.IOException;
 import java.util.ArrayList;

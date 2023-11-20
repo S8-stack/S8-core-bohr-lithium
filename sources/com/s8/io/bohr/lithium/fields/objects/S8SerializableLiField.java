@@ -6,8 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
-import com.s8.api.bohr.BOHR_Properties;
-import com.s8.api.bohr.BOHR_Types;
 import com.s8.api.bytes.ByteInflow;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.bytes.MemoryFootprint;
@@ -18,6 +16,8 @@ import com.s8.api.objects.annotations.S8Getter;
 import com.s8.api.objects.annotations.S8Setter;
 import com.s8.api.objects.serial.BohrSerializable;
 import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Properties;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Types;
 import com.s8.core.io.bohr.atom.serial.BohrSerialUtilities;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldBuilder;

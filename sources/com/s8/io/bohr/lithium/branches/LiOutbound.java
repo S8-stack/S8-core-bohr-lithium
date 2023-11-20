@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.api.bohr.BOHR_Keywords;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Keywords;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.lithium.type.LiType;
 import com.s8.io.bohr.lithium.type.LiTypeComposer;

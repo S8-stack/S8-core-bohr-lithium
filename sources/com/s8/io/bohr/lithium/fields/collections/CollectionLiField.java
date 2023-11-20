@@ -3,8 +3,8 @@ package com.s8.io.bohr.lithium.fields.collections;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.api.bohr.BOHR_Types;
 import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Types;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.handlers.LiHandler;
 import com.s8.io.bohr.lithium.properties.LiFieldProperties;

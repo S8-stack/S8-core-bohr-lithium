@@ -2,10 +2,10 @@ package com.s8.io.bohr.lithium.type;
 
 import java.io.IOException;
 
-import com.s8.api.bohr.BOHR_Keywords;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Keywords;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
 
 /**

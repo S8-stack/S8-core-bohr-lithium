@@ -3,13 +3,13 @@ package com.s8.io.bohr.lithium.fields.arrays;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.api.bohr.BOHR_Types;
 import com.s8.api.bytes.ByteInflow;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.bytes.MemoryFootprint;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
 import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Types;
 import com.s8.io.bohr.lithium.fields.LiField;
 import com.s8.io.bohr.lithium.fields.LiFieldComposer;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;

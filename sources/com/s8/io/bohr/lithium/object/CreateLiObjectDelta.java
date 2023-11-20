@@ -3,10 +3,10 @@ package com.s8.io.bohr.lithium.object;
 import java.io.IOException;
 import java.util.List;
 
-import com.s8.api.bohr.BOHR_Keywords;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.exceptions.S8IOException;
 import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Keywords;
 import com.s8.io.bohr.lithium.branches.LiGraph;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
 import com.s8.io.bohr.lithium.fields.LiFieldDelta;
