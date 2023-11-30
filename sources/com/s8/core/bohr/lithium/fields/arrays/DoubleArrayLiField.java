@@ -8,7 +8,7 @@ import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.bytes.MemoryFootprint;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.atom.protocol.BOHR_Types;
 import com.s8.core.bohr.lithium.fields.LiField;
 import com.s8.core.bohr.lithium.fields.LiFieldComposer;

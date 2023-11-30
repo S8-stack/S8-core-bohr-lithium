@@ -1,9 +1,9 @@
 package com.s8.core.bohr.lithium.properties;
 
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8Getter;
+import com.s8.api.annotations.S8Setter;
 import com.s8.api.exceptions.S8BuildException;
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8Getter;
-import com.s8.api.objects.annotations.S8Setter;
 import com.s8.core.bohr.lithium.fields.EmbeddedTypeNature;
 import com.s8.core.bohr.lithium.fields.LiFieldPrototype;
 

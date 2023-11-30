@@ -3,8 +3,8 @@ package com.s8.core.bohr.lithium.codebase;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.api.exceptions.S8BuildException;
-import com.s8.api.objects.annotations.S8ObjectType;
 import com.s8.core.bohr.lithium.fields.LiFieldFactory;
 import com.s8.core.bohr.lithium.type.LiTypeBuilder;
 

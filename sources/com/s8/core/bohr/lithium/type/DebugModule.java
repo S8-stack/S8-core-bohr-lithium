@@ -3,7 +3,7 @@ package com.s8.core.bohr.lithium.type;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 
 

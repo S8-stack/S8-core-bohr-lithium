@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.lithium.codebase.LiCodebase;
 import com.s8.core.bohr.lithium.object.ExposeLiObjectDelta;
 import com.s8.core.bohr.lithium.type.BuildScope;

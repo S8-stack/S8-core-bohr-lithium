@@ -3,10 +3,10 @@ package com.s8.core.bohr.lithium.demos.repo2;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8ObjectType;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 
 
 /**

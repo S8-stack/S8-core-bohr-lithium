@@ -5,11 +5,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import com.s8.api.annotations.S8Getter;
+import com.s8.api.annotations.S8ObjectType;
+import com.s8.api.annotations.S8Setter;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.annotations.S8Getter;
-import com.s8.api.objects.annotations.S8ObjectType;
-import com.s8.api.objects.annotations.S8Setter;
 
 /**
  * 

@@ -1,7 +1,7 @@
 package com.s8.core.bohr.lithium.fields.arrays;
 
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.lithium.fields.LiField;
 import com.s8.core.bohr.lithium.fields.LiFieldDelta;
 import com.s8.core.bohr.lithium.type.BuildScope;

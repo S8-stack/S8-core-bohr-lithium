@@ -1,7 +1,7 @@
 package com.s8.core.bohr.lithium.demos.repo2;
 
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.annotations.S8ObjectType;
 
 
 

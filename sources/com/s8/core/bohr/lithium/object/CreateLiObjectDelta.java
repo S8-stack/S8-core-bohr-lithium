@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.atom.protocol.BOHR_Keywords;
 import com.s8.core.bohr.lithium.branches.LiGraph;
 import com.s8.core.bohr.lithium.branches.LiOutbound;

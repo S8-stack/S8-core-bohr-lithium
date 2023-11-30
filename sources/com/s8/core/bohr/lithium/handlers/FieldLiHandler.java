@@ -3,10 +3,10 @@ package com.s8.core.bohr.lithium.handlers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8ObjectType;
 
 
 /**

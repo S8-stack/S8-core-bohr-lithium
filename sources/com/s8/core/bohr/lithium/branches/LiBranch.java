@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.s8.api.exceptions.S8BuildException;
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.lithium.codebase.LiCodebase;
 import com.s8.core.io.bytes.base64.Base64Composer;
 

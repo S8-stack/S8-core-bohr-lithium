@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.s8.api.exceptions.S8IOException;
-import com.s8.api.objects.space.SpaceS8Object;
+import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 import com.s8.core.bohr.lithium.type.LiType;
 import com.s8.core.bohr.lithium.type.ResolveScope;
