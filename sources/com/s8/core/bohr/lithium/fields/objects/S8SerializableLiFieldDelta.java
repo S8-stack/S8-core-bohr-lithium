@@ -2,7 +2,7 @@ package com.s8.core.bohr.lithium.fields.objects;
 
 import com.s8.api.exceptions.S8IOException;
 import com.s8.api.flow.space.objects.SpaceS8Object;
-import com.s8.api.serial.BohrSerializable;
+import com.s8.api.serial.S8Serializable;
 import com.s8.core.bohr.lithium.fields.LiField;
 import com.s8.core.bohr.lithium.fields.LiFieldDelta;
 import com.s8.core.bohr.lithium.type.BuildScope;
@@ -20,11 +20,11 @@ public class S8SerializableLiFieldDelta extends LiFieldDelta {
 	
 	public final S8SerializableLiField field;
 	
-	public final BohrSerializable value;
+	public final S8Serializable value;
 
 	
 	
-	public S8SerializableLiFieldDelta(S8SerializableLiField field, BohrSerializable value) {
+	public S8SerializableLiFieldDelta(S8SerializableLiField field, S8Serializable value) {
 		super();
 		this.field = field;
 		this.value = value;
